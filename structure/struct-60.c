@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 
 /*
 Playing with structures
@@ -22,8 +21,8 @@ static int day_tab[2][13] = {
         {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
 };
 
-int day_of_year(struct simpledate *pd) /* set day of year from month, day */
-{
+/* set day of year from month, day */
+int day_of_year(struct simpledate *pd) {
     int i, leap, day;
     day = pd->day;
     leap = pd->year % 4 == 0 && pd->year % 100 != 0 || pd->year % 400 == 0;
@@ -32,14 +31,13 @@ int day_of_year(struct simpledate *pd) /* set day of year from month, day */
     return day;
 }
 
-void dump_date(struct simpledate *pd) /* print date from year, month, day */
-{
+/* print date from year, month, day */
+void dump_date(struct simpledate *pd) {
     /* The date should be in the following format - note that */
     /* The month and day are always two digits with leading zeros */
     //printf("2023/03/07\n");
     printf("%d/%02d/%d\n", pd->year, pd->month, pd->day);
 }
-
 
 int main() {
     printf("Playing with structures\n");
