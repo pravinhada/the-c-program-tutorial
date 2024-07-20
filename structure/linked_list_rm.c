@@ -30,6 +30,30 @@ void list_add(struct list *lst, int value) {
     }
 }
 
+void list_remove(struct list *lst, int value) {
+    struct lnode *current = lst->head;
+    struct lnode *prev;
+
+    if (lst->head->value == value) {
+        lst->head = current->next;
+        free(current);
+        current = NULL;
+    } else {
+        prev = current;
+        current = current->next;
+        while (current != NULL) {
+            if (current->value == value) {
+                prev->next = current->next;
+                free(current);
+                current = NULL;
+                break;
+            }
+            prev = current;
+            current = current->next;
+        }
+    }
+}
+
 struct lnode *list_find(struct list *lst, int value) {
     struct lnode *current = lst->head;
     while (current != NULL) {
@@ -60,22 +84,17 @@ int main() {
     list_add(&mylist, 30);
     list_dump(&mylist);
 
-    mynode = list_find(&mylist, 42);
-    if (mynode == NULL) {
-        printf("Did not find 42\n");
-    } else {
-        printf("Looked for 42, found %d\n", mynode->value);
-    }
+    list_remove(&mylist, 42);
 
-    mynode = list_find(&mylist, 30);
-    if (mynode == NULL || mynode->value != 30) {
-        printf("Did not find 30\n");
-    } else {
-        printf("Found 30\n");
-    }
+    list_remove(&mylist, 10);
+    list_dump(&mylist);
+
+    list_remove(&mylist, 30);
+    list_dump(&mylist);
 
     list_add(&mylist, 40);
     list_dump(&mylist);
-
 }
+
+
 
