@@ -12,7 +12,6 @@ struct list {
 };
 
 void list_add(struct list *lst, int value) {
-    /* Append the value to the end of the linked list. */
     struct lnode *node = malloc(sizeof(struct lnode));
     node->value = value;
     node->next = NULL;
@@ -26,7 +25,7 @@ void list_add(struct list *lst, int value) {
             current = current->next;
         }
         current->next = node;
-        lst->tail = current->next;
+        lst->tail = node;
     }
 }
 
@@ -54,27 +53,20 @@ void list_remove(struct list *lst, int value) {
     }
 }
 
-struct lnode *list_find(struct list *lst, int value) {
-    struct lnode *current = lst->head;
-    while (current != NULL) {
-        if (current->value == value)
-            return current;
-        current = current->next;
-    }
-    return NULL;
-}
-
 void list_dump(struct list *lst) {
-    struct lnode *cur;
+    if (lst->head == NULL) {
+        printf("List is empty!\n");
+        return;
+    }
+    struct lnode *current;
     printf("\nDump:\n");
-    for (cur = lst->head; cur != NULL; cur = cur->next) {
-        printf("  %d\n", cur->value);
+    for (current = lst->head; current != NULL; current = current->next) {
+        printf("  %d\n", current->value);
     }
 }
 
 int main() {
     struct list mylist;
-    struct lnode *mynode;
 
     mylist.head = NULL;
     mylist.tail = NULL;
@@ -93,6 +85,10 @@ int main() {
     list_dump(&mylist);
 
     list_add(&mylist, 40);
+    list_dump(&mylist);
+
+    list_remove(&mylist, 40);
+    list_remove(&mylist, 20);
     list_dump(&mylist);
 }
 
