@@ -61,7 +61,7 @@ void pylist_append(struct pylist *self, char *str) {
     node->text = value;
     node->next = NULL;
 
-    if (self->head == NULL && self->tail == NULL) {
+    if (self->count == 0) {
         self->head = node;
         self->tail = node;
     } else {
