@@ -48,6 +48,16 @@ void list_dump(struct list *lst) {
     }
 }
 
+void list_del(struct list *lst) {
+    struct lnode *cur = lst->head;
+    struct lnode *del;
+    while (cur != NULL) {
+        del = cur;
+        cur = cur->next;
+        free(del);
+    }
+}
+
 int main() {
     struct list mylist;
     struct lnode *mynode;
@@ -77,5 +87,6 @@ int main() {
     list_add(&mylist, 40);
     list_dump(&mylist);
 
+    list_del((&mylist));
 }
 
