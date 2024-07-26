@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 struct TreeMapEntry {
     char *key;  /* public */
@@ -121,14 +122,6 @@ void __TreeMap_put(struct TreeMap *self, char *key, int value) {
     left = NULL;
     right = NULL;
 
-    /*
-     * the node, update the value and return.  Ad the tree is scanned,
-     * keep track of the node containing largest key less than "key"
-     * in the variable left and the node containing the smallest key
-     * greater than "key" in the variable "right".  So if the key is
-     * not found, left will be the closest lower neighbor or null
-     * and right will be the closest greater neighbor or null.
-     */
     while (cur != NULL) {
         cmp = strcmp(key, cur->key);
         if (cmp == 0) {
@@ -236,34 +229,40 @@ int main(void) {
     struct TreeMap *map = TreeMap_new();
     struct TreeMapEntry *cur;
     struct TreeMapIter *iter;
+    char word[100];  /* Yes, this is dangerous */
+    int i, j;
+    int count, maxvalue;
+    char *maxkey;
 
     setvbuf(stdout, NULL, _IONBF, 0);  /* Internal */
 
-    map->debug = 1 == 1;
+    /* Turn off debug */
+    map->debug = 0;
 
-    printf("Testing TreeMap\n");
-    map->put(map, "h", 42);
-    map->put(map, "d", 8);
-    map->put(map, "f", 5);
-    map->put(map, "b", 123);
-    map->dump(map);
-    map->put(map, "k", 9);
-    map->put(map, "m", 67);
-    map->put(map, "j", 12);
-    map->put(map, "f", 6);
-    map->dump(map);
+    /* Loop over each word in the file */
+    while (scanf("%s", word) != EOF) {
+        for (i = 0, j = 0; word[i] != '\0'; i++) {
+            if (!isalpha(word[i])) continue;
+            word[j++] = tolower(word[i]);
+        }
+        word[j] = '\0';
+        count = map->get(map, word, 0);
+        map->put(map, word, count + 1);
+    }
 
-    printf("r=%d\n", map->get(map, "r", 42));
-    printf("x=%d\n", map->get(map, "x", 42));
-
-    printf("\nIterate\n");
+    maxkey = NULL;
+    maxvalue = -1;
     iter = map->iter(map);
     while (1) {
         cur = iter->next(iter);
         if (cur == NULL) break;
-        printf(" %s=%d\n", cur->key, cur->value);
+        if (maxkey == NULL || cur->value > maxvalue) {
+            maxkey = cur->key;
+            maxvalue = cur->value;
+        }
     }
     iter->del(iter);
+    printf("\n%s %d\n", maxkey, maxvalue);
 
     map->del(map);
 }
