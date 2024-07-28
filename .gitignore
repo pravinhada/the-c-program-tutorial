@@ -1,0 +1,6 @@
+CMakeLists.txt
+cmake-build-debug
+cc4e_slides
+concat_str.dSYM
+.idea
+.DS_Store
