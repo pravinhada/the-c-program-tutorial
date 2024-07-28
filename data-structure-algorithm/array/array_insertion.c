@@ -2,6 +2,7 @@
 
 #define MAX 50
 
+/* takes O(n) to insert an element */
 int main() {
     int arr[MAX] = {1, 2, 5, 7, 8};
     int new_item = 10, pos = 3, n = 5;
