@@ -105,7 +105,7 @@ int main() {
     printf("total element of linkedlist: %d\n", list->count);
     list->display(list);
 
-    search = list->find(list, "java");
+    search = list->find(list, "linked list");
     if (NULL != search) 
         printf("found element: %s\n", search->data);
     else   
