@@ -12,15 +12,23 @@ struct LinkedList {
     struct lnode *tail;
     int count;
 
-    void (*add)(struct LinkedList *self, char *data);
+    void (*append)(struct LinkedList *self, char *data);
+
+    void (*prepend)(struct LinkedList *self, char *data);
+
     void (*del)(struct LinkedList *self);
-    int (*size)(struct LinkedList *self);
+
+    int (*length)(struct LinkedList *self);
+
     void (*display)(struct LinkedList *self);
+
     struct lnode *(*find)(struct LinkedList *self, char *keyword);
+
+    void (*reverse)(struct LinkedList *self);
 };
 
 /* complexity of O(n) time to add new data in worst case */
-void __LinkedList_add(struct LinkedList *self, char *data) {
+void __LinkedList_append(struct LinkedList *self, char *data) {
     struct lnode *cur, *new;
 
     new = malloc(sizeof(*new));
@@ -36,28 +44,32 @@ void __LinkedList_add(struct LinkedList *self, char *data) {
         cur = self->head;
         while (cur->next != NULL)
             cur = cur->next;
-        
+
         cur->next = new;
         self->tail = new;
     }
     self->count++;
 }
 
-void __LinkedList_del(struct LinkedList *self) {
+/* this should be constant time complexity O(n) */
+void __LinkedList_prepend(struct LinkedList *self, char *data) {
 
+}
+
+void __LinkedList_del(struct LinkedList *self) {
     struct lnode *cur, *next;
     cur = self->head;
 
-    while(cur!= NULL) {
+    while (cur != NULL) {
         free(cur->data);
         next = cur->next;
         free(cur);
         cur = next;
     }
-    free((void*)self);
+    free((void *) self);
 }
 
-int __LinkedList_size(struct LinkedList *self) {
+int __LinkedList_length(struct LinkedList *self) {
     return self->count;
 }
 
@@ -73,7 +85,7 @@ void __LinkedList_display(struct LinkedList *self) {
 /* complexity of O(n) to search in worse case */
 struct lnode *__LinkedList_find(struct LinkedList *self, char *keyword) {
     struct lnode *cur = self->head;
-    while(cur->next != NULL) {
+    while (cur->next != NULL) {
         if (strcmp(cur->data, keyword) == 0)
             return cur;
         cur = cur->next;
@@ -81,35 +93,56 @@ struct lnode *__LinkedList_find(struct LinkedList *self, char *keyword) {
     return NULL;
 }
 
+/* O(n) time to reverse */
+void __LinkedList_reverse(struct LinkedList *self) {
+    struct lnode *prev = NULL;
+    struct lnode *cur = self->head;
+    struct lnode *next;
+
+    while (cur != NULL) {
+        next = cur->next;
+        cur->next = prev;
+        prev = cur;
+        cur = next;
+    }
+    self->head = prev;
+}
+
 struct LinkedList *__LinkedList_new() {
-    struct LinkedList *new = malloc(sizeof(*new));
+    struct LinkedList *new = (struct LinkedList *) malloc(sizeof(*new));
     new->head = NULL;
     new->tail = NULL;
-    new->add = &__LinkedList_add;
+    new->append = &__LinkedList_append;
+    new->prepend = &__LinkedList_prepend;
     new->del = &__LinkedList_del;
-    new->size = &__LinkedList_size;
+    new->length = &__LinkedList_length;
     new->display = &__LinkedList_display;
     new->find = &__LinkedList_find;
+    new->reverse = &__LinkedList_reverse;
     return new;
 }
 
 int main() {
     struct LinkedList *list = __LinkedList_new();
     struct lnode *search;
-    list->add(list, "this");
-    list->add(list, "is");
-    list->add(list, "c");
-    list->add(list, "linked list");
-    list->add(list, "data structure");
+    list->append(list, "this");
+    list->append(list, "is");
+    list->append(list, "c");
+    list->append(list, "linked list");
+    list->append(list, "data structure");
 
-    printf("total element of linkedlist: %d\n", list->count);
+    printf("total element of linkedlist: %d\n", list->length(list));
     list->display(list);
 
     search = list->find(list, "linked list");
-    if (NULL != search) 
+    if (NULL != search)
         printf("found element: %s\n", search->data);
-    else   
+    else
         printf("not found\n");
+
+    printf("reversing list: \n");
+    list->reverse(list);
+    list->display(list);
 
     list->del(list);
 }
