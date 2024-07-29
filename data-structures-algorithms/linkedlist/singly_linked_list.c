@@ -53,7 +53,21 @@ void __LinkedList_append(struct LinkedList *self, char *data) {
 
 /* this should be constant time complexity O(n) */
 void __LinkedList_prepend(struct LinkedList *self, char *data) {
+    struct lnode *new = (struct lnode *) malloc(sizeof(*new));
+    char *new_data = malloc(sizeof(*new_data));
 
+    strcpy(new_data, data);
+    new->data = new_data;
+
+    if (self->head == NULL) {
+        self->head = new;
+        self->tail = new;
+        new->next = NULL;
+    } else {
+        new->next = self->head;
+        self->head = new;
+    }
+    self->count++;
 }
 
 void __LinkedList_del(struct LinkedList *self) {
@@ -142,7 +156,8 @@ int main() {
 
     printf("reversing list: \n");
     list->reverse(list);
+    list->prepend(list, "A");
     list->display(list);
-
+    printf("total element in linkedlist is %d\n", list->length(list));
     list->del(list);
 }

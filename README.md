@@ -1,1 +1,1 @@
-# The-C-programing-tutorials and Data structure
+# The-C-programing-tutorials with Data structures & Algorithms
