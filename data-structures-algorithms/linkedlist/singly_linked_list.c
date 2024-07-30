@@ -16,7 +16,9 @@ struct LinkedList {
 
     void (*prepend)(struct LinkedList *self, char *data);
 
-    void (*del)(struct LinkedList *self);
+    void (*remove)(struct LinkedList *self, char *keyword);
+
+    void (*clean)(struct LinkedList *self);
 
     int (*length)(struct LinkedList *self);
 
@@ -51,7 +53,7 @@ void __LinkedList_append(struct LinkedList *self, char *data) {
     self->count++;
 }
 
-/* this should be constant time complexity O(n) */
+/* this should be constant time complexity O(n), since it add at the beginning */
 void __LinkedList_prepend(struct LinkedList *self, char *data) {
     struct lnode *new = (struct lnode *) malloc(sizeof(*new));
     char *new_data = malloc(sizeof(*new_data));
@@ -70,7 +72,32 @@ void __LinkedList_prepend(struct LinkedList *self, char *data) {
     self->count++;
 }
 
-void __LinkedList_del(struct LinkedList *self) {
+/* this is in an order of O(n) complexity */
+void __LinkedList_remove(struct LinkedList *self, char *keyword) {
+    if (self->head == NULL) return;
+
+    struct lnode *prev, *cur;
+
+    cur = self->head;
+    if (strcmp(cur->data, keyword) == 0) {
+        self->head = cur->next;
+        free(cur->data);
+        free(cur);
+    } else {
+        for (prev = cur; cur->next != NULL; prev = cur, cur = cur->next) {
+            if (strcmp(cur->data, keyword) == 0) {
+                prev->next = cur->next;
+                free(cur->data);
+                free(cur);
+                break;
+            }
+        }
+    }
+
+    self->count--;
+}
+
+void __LinkedList_clean(struct LinkedList *self) {
     struct lnode *cur, *next;
     cur = self->head;
 
@@ -128,11 +155,12 @@ struct LinkedList *__LinkedList_new() {
     new->tail = NULL;
     new->append = &__LinkedList_append;
     new->prepend = &__LinkedList_prepend;
-    new->del = &__LinkedList_del;
+    new->clean = &__LinkedList_clean;
     new->length = &__LinkedList_length;
     new->display = &__LinkedList_display;
     new->find = &__LinkedList_find;
     new->reverse = &__LinkedList_reverse;
+    new->remove = &__LinkedList_remove;
     return new;
 }
 
@@ -157,7 +185,9 @@ int main() {
     printf("reversing list: \n");
     list->reverse(list);
     list->prepend(list, "A");
+    list->remove(list, "data structure");
     list->display(list);
+
     printf("total element in linkedlist is %d\n", list->length(list));
-    list->del(list);
+    list->clean(list);
 }
