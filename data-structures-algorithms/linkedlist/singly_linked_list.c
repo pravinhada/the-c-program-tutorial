@@ -7,6 +7,14 @@ struct lnode {
     struct lnode *next;
 };
 
+struct ListIter {
+    struct lnode *current;
+
+    struct lnode *(*next)(struct ListIter *self);
+
+    void (*del)(struct ListIter *self);
+};
+
 struct LinkedList {
     struct lnode *head;
     struct lnode *tail;
@@ -27,6 +35,8 @@ struct LinkedList {
     struct lnode *(*find)(struct LinkedList *self, char *keyword);
 
     void (*reverse)(struct LinkedList *self);
+
+    struct ListIter *(*iter)(struct LinkedList *self);
 };
 
 /* complexity of O(n) time to add new data in worst case */
@@ -149,6 +159,25 @@ void __LinkedList_reverse(struct LinkedList *self) {
     self->head = prev;
 }
 
+struct lnode *__ListIter_next(struct ListIter *self) {
+    struct lnode *result = self->current;
+    if (result == NULL) return NULL;
+    self->current = self->current->next;
+    return result;
+}
+
+void __ListIter_del(struct ListIter *self) {
+    free((void *) self);
+}
+
+struct ListIter *__List_Iter(struct LinkedList *self) {
+    struct ListIter *new = (struct ListIter *) malloc(sizeof(*new));
+    new->current = self->head;
+    new->next = &__ListIter_next;
+    new->del = &__ListIter_del;
+    return new;
+}
+
 struct LinkedList *__LinkedList_new() {
     struct LinkedList *new = (struct LinkedList *) malloc(sizeof(*new));
     new->head = NULL;
@@ -161,12 +190,15 @@ struct LinkedList *__LinkedList_new() {
     new->find = &__LinkedList_find;
     new->reverse = &__LinkedList_reverse;
     new->remove = &__LinkedList_remove;
+    new->iter = &__List_Iter;
     return new;
 }
 
+
 int main() {
     struct LinkedList *list = __LinkedList_new();
-    struct lnode *search;
+    struct lnode *search, *cur;
+    struct ListIter *iter;
     list->append(list, "this");
     list->append(list, "is");
     list->append(list, "c");
@@ -189,5 +221,14 @@ int main() {
     list->display(list);
 
     printf("total element in linkedlist is %d\n", list->length(list));
+
+    printf("iterating the list:\n");
+    iter = list->iter(list);
+    while (1) {
+        cur = iter->next(iter);
+        if (cur == NULL) break;
+        printf("\t%s\n", cur->data);
+    }
+    free(iter);
     list->clean(list);
 }
