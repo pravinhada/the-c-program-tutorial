@@ -8,6 +8,14 @@ struct lnode {
     struct lnode *next;
 };
 
+struct ListIter {
+    struct lnode *current;
+
+    struct lnode *(*next)(struct ListIter *self);
+
+    void (*del)(struct ListIter *self);
+};
+
 struct DoublyLinkedList {
     struct lnode *head;
     struct lnode *tail;
@@ -28,6 +36,8 @@ struct DoublyLinkedList {
     struct lnode *(*find)(struct DoublyLinkedList *self, char *keyword);
 
     void (*reverse)(struct DoublyLinkedList *self);
+
+    struct ListIter *(*iter)(struct DoublyLinkedList *self);
 };
 
 /* complexity of O(n) time to add new data in worst case */
@@ -140,6 +150,25 @@ void __DoublyLinkedList_reverse(struct DoublyLinkedList *self) {
     printf("\n");
 }
 
+void __ListIter_del(struct ListIter *self) {
+    free((void *) self);
+}
+
+struct lnode *__ListIter_next(struct ListIter *self) {
+    struct lnode *result = self->current;
+    if (result == NULL) return NULL;
+    self->current = self->current->next;
+    return result;
+}
+
+struct ListIter *__List_iter(struct DoublyLinkedList *self) {
+    struct ListIter *new = (struct ListIter *) malloc(sizeof(*new));
+    new->current = self->head;
+    new->next = &__ListIter_next;
+    new->del = &__ListIter_del;
+    return new;
+}
+
 struct DoublyLinkedList *__DoublyLinkedList_new() {
     struct DoublyLinkedList *new = (struct DoublyLinkedList *) malloc(sizeof(*new));
     new->head = NULL;
@@ -152,12 +181,14 @@ struct DoublyLinkedList *__DoublyLinkedList_new() {
     new->find = &__DoublyLinkedList_find;
     new->reverse = &__DoublyLinkedList_reverse;
     new->remove = &__DoublyLinkedList_remove;
+    new->iter = &__List_iter;
     return new;
 }
 
 int main() {
     struct DoublyLinkedList *list = __DoublyLinkedList_new();
-    struct lnode *search;
+    struct lnode *search, *cur;
+    struct ListIter *iter;
     list->append(list, "a");
     list->append(list, "b");
     list->append(list, "c");
@@ -190,5 +221,13 @@ int main() {
     list->display(list);
     printf("total element in DoublyLinkedList is %d\n", list->length(list));
 
+    printf("iterating list:\n");
+    iter = list->iter(list);
+    while (1) {
+        cur = iter->next(iter);
+        if (cur == NULL) break;
+        printf("\t (%s)\n", cur->data);
+    }
+    iter->del(iter);
     list->clean(list);
 }

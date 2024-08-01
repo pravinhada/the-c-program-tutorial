@@ -229,6 +229,6 @@ int main() {
         if (cur == NULL) break;
         printf("\t%s\n", cur->data);
     }
-    free(iter);
+    iter->del(iter);
     list->clean(list);
 }
