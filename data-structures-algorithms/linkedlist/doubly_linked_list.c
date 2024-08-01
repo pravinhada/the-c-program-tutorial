@@ -78,29 +78,18 @@ void __DoublyLinkedList_prepend(struct DoublyLinkedList *self, char *data) {
     self->count++;
 }
 
-/* this is in an order of O(n) complexity */
+/* this is in an order of O(n) complexity, this depends on search function */
 void __DoublyLinkedList_remove(struct DoublyLinkedList *self, char *keyword) {
-    if (self->head == NULL) return;
-
-    struct lnode *prev, *cur;
-
-    cur = self->head;
-    /* if first node */
-    if (strcmp(cur->data, keyword) == 0) {
-        self->head = cur->next;
-        free(cur->data);
-        free(cur);
-    } else {
-        for (prev = cur; cur->next != NULL; prev = cur, cur = cur->next) {
-            if (strcmp(cur->data, keyword) == 0) {
-                prev->next = cur->next;
-                cur->next->prev = prev;
-                free(cur->data);
-                free(cur);
-                self->count--;
-                break;
-            }
-        }
+    struct lnode *prev, *next;
+    struct lnode *result = self->find(self, keyword);
+    if (result != NULL) {
+        prev = result->prev;
+        next = result->next;
+        prev->next = next;
+        next->prev = prev;
+        free(result->data);
+        free(result);
+        self->count--;
     }
 }
 
@@ -195,5 +184,11 @@ int main() {
     list->display(list);
 
     printf("total element in DoublyLinkedList is %d\n", list->length(list));
+
+    printf("removing c from list\n");
+    list->remove(list, "c");
+    list->display(list);
+    printf("total element in DoublyLinkedList is %d\n", list->length(list));
+
     list->clean(list);
 }
