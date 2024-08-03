@@ -4,7 +4,7 @@
 #define MAX_SIZE 50
 
 struct Element {
-    char data;
+    int data;
     struct Element *next;
 };
 
@@ -13,7 +13,7 @@ struct Stack {
     int count;
 };
 
-void Stack_push(struct Stack *self, char input) {
+void Stack_push(struct Stack *self, int input) {
     struct Element *element;
     if (self == NULL) return;
     if (self->count > MAX_SIZE) {
@@ -29,8 +29,8 @@ void Stack_push(struct Stack *self, char input) {
     self->count++;
 }
 
-char Stack_pop(struct Stack *self) {
-    char data;
+int Stack_pop(struct Stack *self) {
+    int data;
     struct Element *cur;
     if (self == NULL || self->top == NULL) {
         printf("Stack underflow\n");
@@ -40,11 +40,12 @@ char Stack_pop(struct Stack *self) {
     data = cur->data;
     self->top = cur->next;
     free(cur);
+    printf("popped: [%d]\n", data);
     self->count--;
     return data;
 }
 
-char Stack_peek(struct Stack *self) {
+int Stack_peek(struct Stack *self) {
     if (self == NULL || self->top == NULL) {
         printf("Stack underflow\n");
         return 0;
@@ -91,46 +92,30 @@ struct Stack *Stack_init(void) {
     return stack;
 }
 
-int is_balance(struct Stack *self, char *test) {
-    int balance = 0;
-    while (*test != '\0') {
-        char s;
-        printf("%c", *test);
-        if (*test == '(' || *test == '{' || *test == '[')
-            Stack_push(self, *test);
-
-        switch (*test) {
-            case ')' :
-                s = Stack_pop(self);
-                balance = (s == '(') ? 1 : 0;
-                break;
-            case '}':
-                s = Stack_pop(self);
-                balance = (s == '{') ? 1 : 0;
-                break;
-            case ']':
-                s = Stack_pop(self);
-                balance = (s == '[') ? 1 : 0;
-                break;
-        }
-        test++;
-    }
-    return balance;
-}
-
 int main() {
-    int balance = 0;
-    char *test = "(ABC)[{ZXYS}]{PQR}[HELLO]";
-    struct Stack *stack = Stack_init();
+    struct Stack *stack1 = Stack_init();
+    struct Stack *stack2 = Stack_init();
 
-    balance = is_balance(stack, test);
-    printf("\n");
+    int ele[] = {3, 5, 7, 2, 1, 9};
+    int len = 6;
+    int i, last;
 
-    if (balance == 1 && Stack_length(stack) == 0)
-        printf("expression is balance\n");
-    else
-        printf("expression is not balance\n");
+    for (i = 0; i < len; i++) {
+        if (Stack_length(stack1) == 0) {
+            Stack_push(stack1, ele[i]);
+            Stack_push(stack2, ele[i]);
+        } else {
+            last = Stack_peek(stack2);
+            if (ele[i] >= last)
+                Stack_push(stack2, last);
+            else
+                Stack_push(stack2, ele[i]);
+            Stack_push(stack1, ele[i]);
+        }
+    }
+    printf("minimum is: %d\n", Stack_peek(stack2));
 
-    Stack_del(stack);
+    Stack_del(stack1);
+    Stack_del(stack2);
     return 0;
 }
