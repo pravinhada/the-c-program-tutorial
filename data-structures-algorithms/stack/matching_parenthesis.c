@@ -4,7 +4,7 @@
 #define MAX_SIZE 50
 
 struct Element {
-    int data;
+    char data;
     struct Element *next;
 };
 
@@ -13,8 +13,9 @@ struct Stack {
     int count;
 };
 
-void Stack_push(struct Stack *self, int input) {
+void Stack_push(struct Stack *self, char input) {
     struct Element *element;
+    if (self == NULL) return;
     if (self->count > MAX_SIZE) {
         printf("Stack overflow\n");
         return;
@@ -28,8 +29,8 @@ void Stack_push(struct Stack *self, int input) {
     self->count++;
 }
 
-int Stack_pop(struct Stack *self) {
-    int data;
+char Stack_pop(struct Stack *self) {
+    char data;
     struct Element *cur;
     if (self == NULL || self->top == NULL) {
         printf("Stack underflow\n");
@@ -39,12 +40,11 @@ int Stack_pop(struct Stack *self) {
     data = cur->data;
     self->top = cur->next;
     free(cur);
-    printf("popped: [%d]\n", data);
     self->count--;
     return data;
 }
 
-int Stack_peek(struct Stack *self) {
+char Stack_peek(struct Stack *self) {
     if (self->count == 0) {
         printf("Stack is empty!\n");
         return 0;
@@ -88,29 +88,45 @@ struct Stack *Stack_init(void) {
     return stack;
 }
 
-int main() {
-    struct Stack *stack = Stack_init();
-    if (NULL == stack) {
-        printf("stack is null\n");
-        return -1;
+int is_balance(struct Stack *self, char *test) {
+    int balance = 0;
+    while (*test != '\0') {
+        char s;
+        printf("%c", *test);
+        if (*test == '(' || *test == '{' || *test == '[')
+            Stack_push(self, *test);
+
+        switch (*test) {
+            case ')' :
+                s = Stack_pop(self);
+                balance = (s == '(') ? 1 : 0;
+                break;
+            case '}':
+                s = Stack_pop(self);
+                balance = (s == '{') ? 1 : 0;
+                break;
+            case ']':
+                s = Stack_pop(self);
+                balance = (s == '[') ? 1 : 0;
+                break;
+        }
+        test++;
     }
-    Stack_push(stack, 5);
-    Stack_push(stack, 4);
-    Stack_push(stack, 7);
-    Stack_push(stack, 3);
-    Stack_push(stack, 9);
-    Stack_display(stack);
+    return balance;
+}
 
-    Stack_pop(stack);
-    Stack_pop(stack);
-    Stack_pop(stack);
+int main() {
+    int balance = 0;
+    char *test = "(ABC)[{ZXYS}]{PQR}[HELLO]";
+    struct Stack *stack = Stack_init();
 
-    printf("stack length is: %d\n", Stack_length(stack));
-    Stack_pop(stack);
-    Stack_pop(stack);
-    Stack_pop(stack);
+    balance = is_balance(stack, test);
+    printf("\n");
 
-    Stack_peek(stack);
+    if (balance == 1 && Stack_length(stack) == 0)
+        printf("expression is balance\n");
+    else
+        printf("expression is not balance\n");
 
     Stack_del(stack);
     return 0;
