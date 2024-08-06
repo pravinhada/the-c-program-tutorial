@@ -54,8 +54,6 @@ int Stack_peek(struct Stack *self) {
 
 void Stack_del(struct Stack *self) {
     struct Element *cur, *next;
-    if (self == NULL || self->top == NULL) return;
-
     cur = self->top;
     while (cur != NULL) {
         next = cur->next;

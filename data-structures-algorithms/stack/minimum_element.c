@@ -59,8 +59,6 @@ int Stack_peek(struct Stack *self) {
 
 void Stack_del(struct Stack *self) {
     struct Element *cur, *next;
-    if (self == NULL || self->top == NULL) return;
-
     cur = self->top;
     while (cur != NULL) {
         next = cur->next;
@@ -95,6 +93,8 @@ struct Stack *Stack_init(void) {
 int main() {
     struct Stack *stack1 = Stack_init();
     struct Stack *stack2 = Stack_init();
+    if (stack1 == NULL || stack2 == NULL)
+        exit(0);
 
     int ele[] = {3, 5, 7, 2, 1, 9};
     int len = 6;

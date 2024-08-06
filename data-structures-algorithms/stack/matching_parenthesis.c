@@ -58,8 +58,6 @@ char Stack_peek(struct Stack *self) {
 
 void Stack_del(struct Stack *self) {
     struct Element *cur, *next;
-    if (self == NULL || self->top == NULL) return;
-
     cur = self->top;
     while (cur != NULL) {
         next = cur->next;
@@ -122,6 +120,8 @@ int main() {
     int balance = 0;
     char *test = "(ABC)[{ZXYS}]{PQR}[HELLO]";
     struct Stack *stack = Stack_init();
+    if (stack == NULL)
+        exit(0);
 
     balance = is_balance(stack, test);
     printf("\n");
