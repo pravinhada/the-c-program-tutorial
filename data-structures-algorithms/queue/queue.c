@@ -3,6 +3,7 @@
 
 #define QUEUE_SIZE 20
 
+/* circular queue, initialize head and tail with -1 */
 struct queue {
     int element[QUEUE_SIZE];
     int head;
