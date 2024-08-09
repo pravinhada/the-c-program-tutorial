@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 /* O(n^2) of time complexity and not adaptive
- * since we don't know the sort until it
+ * since we don't know the sorting until it
  * completely end the loops */
 
 /* swap using pointer */
@@ -27,8 +27,8 @@ void selection_sort(int s[], int size) {
             if (s[i] > s[j]) {
                 swap(&s[i], &s[j]);
             }
-            print(s, size);
         }
+        print(s, size);
     }
 }
 
