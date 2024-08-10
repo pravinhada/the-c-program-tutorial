@@ -24,7 +24,7 @@ void insertion_sort(int a[], int size, int startIndex, int increment) {
     for (int i = startIndex; i < size; i = i + increment) {
         for (int j = min(i + increment, size - 1); j - increment >= 0; j = j - increment) {
             if (a[j] < a[j - increment]) {
-                swap(&a[j], &a[j - 1]);
+                swap(&a[j], &a[j - increment]);
             } else {
                 break;
             }
@@ -34,7 +34,7 @@ void insertion_sort(int a[], int size, int startIndex, int increment) {
 }
 
 void shell_sort(int a[], int size) {
-    int increment = size / 2;
+    int increment = size / 3;
     while (increment >= 1) {
         for (int startIndex = 0; startIndex < increment; startIndex++) {
             insertion_sort(a, size, startIndex, increment);
