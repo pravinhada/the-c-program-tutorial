@@ -5,11 +5,10 @@
 /* O(nlogn) complexity of this algorithm, it is not adaptive sort and also takes extra space due to recursion and it is not stable */
 /* it is preferred to merge sort */
 
-void swap(int arr[], int low, int high) {
-    int temp;
-    temp = arr[low];
-    arr[low] = arr[high];
-    arr[high] = temp;
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
 void print(int arr[]) {
@@ -25,18 +24,18 @@ int partition(int arr[], int low, int high) {
     int h = high;
 
     while (l < h) {
-        while (arr[l] <= pivot && l < h)
+        while (arr[l] <= pivot && l <= high - 1)
             l++;
-        while (arr[h] > pivot)
+        while (arr[h] > pivot && h >= low + 1)
             h--;
         
         if (l < h)
-            swap(arr, l ,h);
+            swap(&arr[l], &arr[h]);
     }
-    swap(arr, low, h);
+    swap(&arr[low], &arr[h]);
     printf("Pivot: %d\n", pivot);
     print(arr);
-    return pivot;
+    return h;
 }
 
 void quick_sort(int arr[], int low, int high) {
