@@ -178,6 +178,13 @@ struct ListIter *__List_Iter(struct LinkedList *self) {
     return new;
 }
 
+void print_reverse(struct lnode *node) {
+    if (node != NULL) {
+        print_reverse(node->next);
+        printf("%s\n", node->data);
+    }
+}
+
 struct LinkedList *__LinkedList_new() {
     struct LinkedList *new = (struct LinkedList *) malloc(sizeof(*new));
     new->head = NULL;
@@ -229,6 +236,8 @@ int main() {
         if (cur == NULL) break;
         printf("\t%s\n", cur->data);
     }
+
+    print_reverse(list->head);
     iter->del(iter);
     list->clean(list);
 }
