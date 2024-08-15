@@ -17,6 +17,12 @@ struct Binary_Tree {
 
     void (*del)(struct Binary_Tree *self);
 
+    void (*pre_order)(struct node *self);
+
+    void (*in_order)(struct node *self);
+
+    void (*post_order)(struct node *self);
+
 };
 
 void Binary_Tree_insert(struct Binary_Tree *self, int data) {
@@ -29,6 +35,7 @@ void Binary_Tree_insert(struct Binary_Tree *self, int data) {
     new->data = data;
     if (self->root == NULL) {
         self->root = new;
+        self->count++;
     } else {
         current = self->root;
         while (1) {
@@ -37,18 +44,19 @@ void Binary_Tree_insert(struct Binary_Tree *self, int data) {
                 current = current->left;
                 if (current == NULL) {
                     parent->left = new;
+                    self->count++;
                     return;
                 }
             } else {
                 current = current->right;
                 if (current == NULL) {
                     parent->right = new;
+                    self->count++;
                     return;
                 }
             }
         }
     }
-    self->count++;
 }
 
 struct node *Binary_Tree_search(struct Binary_Tree *self, int data) {
@@ -68,7 +76,7 @@ struct node *Binary_Tree_search(struct Binary_Tree *self, int data) {
                 current = current->right;
             }
             if (current == NULL) {
-                printf("not found\n");
+                printf("not found: %d\n", data);
                 return NULL;
             }
         }
@@ -93,11 +101,27 @@ void Binary_Tree_del(struct Binary_Tree *self) {
 }
 
 
-void in_order_traverse(struct node *root) {
+void pre_order_traverse(struct node *root) {
     if (root != NULL) {
         printf("%d ", root->data);
+        pre_order_traverse(root->left);
+        pre_order_traverse(root->right);
+    }
+}
+
+void in_order_traverse(struct node *root) {
+    if (root != NULL) {
         in_order_traverse(root->left);
+        printf("%d ", root->data);
         in_order_traverse(root->right);
+    }
+}
+
+void post_order_traverse(struct node *root) {
+    if (root != NULL) {
+        post_order_traverse(root->left);
+        post_order_traverse(root->right);
+        printf("%d ", root->data);
     }
 }
 
@@ -108,6 +132,9 @@ struct Binary_Tree *Binary_Tree_init() {
     tree->insert = &Binary_Tree_insert;
     tree->search = &Binary_Tree_search;
     tree->del = &Binary_Tree_del;
+    tree->pre_order = &pre_order_traverse;
+    tree->in_order = &in_order_traverse;
+    tree->post_order = &post_order_traverse;
     return tree;
 }
 
@@ -128,8 +155,14 @@ int main() {
     tree->search(tree, 6);
     tree->search(tree, 9);
 
-    in_order_traverse(tree->root);
+    tree->pre_order(tree->root);
+    printf("\n");
+    tree->in_order(tree->root);
+    printf("\n");
+    tree->post_order(tree->root);
+    printf("\n");
 
+    printf("total element: %d\n", tree->count);
     tree->del(tree);
     return 0;
 }
