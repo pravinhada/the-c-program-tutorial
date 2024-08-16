@@ -107,27 +107,27 @@ void Binary_Tree_del(struct Binary_Tree *self) {
 
 
 void pre_order_traverse(struct node *root) {
-    if (root != NULL) {
-        printf("%d ", root->data);
-        pre_order_traverse(root->left);
-        pre_order_traverse(root->right);
-    }
+    if (root == NULL)
+        return;
+    printf("%d ", root->data);
+    pre_order_traverse(root->left);
+    pre_order_traverse(root->right);
 }
 
 void in_order_traverse(struct node *root) {
-    if (root != NULL) {
-        in_order_traverse(root->left);
-        printf("%d ", root->data);
-        in_order_traverse(root->right);
-    }
+    if (root == NULL)
+        return;
+    in_order_traverse(root->left);
+    printf("%d ", root->data);
+    in_order_traverse(root->right);
 }
 
 void post_order_traverse(struct node *root) {
-    if (root != NULL) {
-        post_order_traverse(root->left);
-        post_order_traverse(root->right);
-        printf("%d ", root->data);
-    }
+    if (root == NULL)
+        return;
+    post_order_traverse(root->left);
+    post_order_traverse(root->right);
+    printf("%d ", root->data);
 }
 
 struct Binary_Tree *Binary_Tree_init() {
