@@ -1,6 +1,11 @@
 #include "stdio.h"
 #include "stdlib.h"
 
+#define QUEUE_SIZE 20
+
+/* breadth-first-traversal, using Queue */
+/* bft takes O(n) time complexity, where n is number of nodes */
+
 struct node {
     int data;
     struct node *left;
@@ -17,13 +22,67 @@ struct Binary_Tree {
 
     void (*del)(struct Binary_Tree *self);
 
-    void (*pre_order)(struct node *self);
-
-    void (*in_order)(struct node *self);
-
-    void (*post_order)(struct node *self);
+    void (*breadth_first)(struct Binary_Tree *tree, struct node *root);
 
 };
+
+struct queue {
+    int element[20];
+    int head;
+    int tail;
+};
+
+int is_empty(struct queue *self) {
+    return self->head == -1;
+}
+
+int is_full(struct queue *self) {
+    int next = (self->tail + 1) % QUEUE_SIZE;
+    return next == self->head;
+}
+
+void enqueue(struct queue *self, int data) {
+    if (is_full(self)) {
+        printf("Queue is full\n");
+        return;
+    }
+    self->tail = (self->tail + 1) % QUEUE_SIZE;
+    self->element[self->tail] = data;
+
+    if (self->head == -1)
+        self->head = self->tail;
+}
+
+int dequeue(struct queue *self) {
+    if (is_empty(self)) {
+        printf("Queue is empty\n");
+        return 0;
+    }
+    int index = self->head;
+    int data = self->element[index];
+    if (index == self->tail)
+        self->head = -1;
+    else
+        self->head = (index + 1) % QUEUE_SIZE;
+
+    return data;
+}
+
+struct queue *Queue_init() {
+    struct queue *new = (struct queue *) malloc(sizeof(*new));
+    if (NULL == new) {
+        printf("could not create queue\n");
+        exit(0);
+    }
+    new->head = -1;
+    new->tail = -1;
+    return new;
+}
+
+void Queue_del(struct queue *self) {
+    free((void *) self);
+}
+
 
 void Binary_Tree_insert(struct Binary_Tree *self, int data) {
     struct node *new = (struct node *) malloc(sizeof(*new));
@@ -59,6 +118,26 @@ void Binary_Tree_insert(struct Binary_Tree *self, int data) {
     }
 }
 
+/* breadth-first-traversal */
+void Binary_Tree_bf(struct Binary_Tree *tree, struct node *root) {
+    if (root == NULL)
+        return;
+    struct queue *my_queue = Queue_init();
+    enqueue(my_queue, root->data);
+
+    while (!is_empty(my_queue)) {
+        int last = dequeue(my_queue);
+        struct node *cur = tree->search(tree, last); // queue can be created for node, just a hack for now
+        printf("%d ", last);
+        if (cur->left != NULL)
+            enqueue(my_queue, cur->left->data);
+        if (cur->right != NULL)
+            enqueue(my_queue, cur->right->data);
+    }
+    printf("\n");
+    Queue_del(my_queue);
+}
+
 struct node *Binary_Tree_search(struct Binary_Tree *self, int data) {
     struct node *current = self->root;
     if (current == NULL) {
@@ -67,7 +146,6 @@ struct node *Binary_Tree_search(struct Binary_Tree *self, int data) {
     }
     while (1) {
         if (current->data == data) {
-            printf("found data: %d\n", data);
             return current;
         } else {
             if (data < current->data) {
@@ -76,7 +154,6 @@ struct node *Binary_Tree_search(struct Binary_Tree *self, int data) {
                 current = current->right;
             }
             if (current == NULL) {
-                printf("not found: %d\n", data);
                 return NULL;
             }
         }
@@ -101,30 +178,6 @@ void Binary_Tree_del(struct Binary_Tree *self) {
 }
 
 
-void pre_order_traverse(struct node *root) {
-    if (root != NULL) {
-        printf("%d ", root->data);
-        pre_order_traverse(root->left);
-        pre_order_traverse(root->right);
-    }
-}
-
-void in_order_traverse(struct node *root) {
-    if (root != NULL) {
-        in_order_traverse(root->left);
-        printf("%d ", root->data);
-        in_order_traverse(root->right);
-    }
-}
-
-void post_order_traverse(struct node *root) {
-    if (root != NULL) {
-        post_order_traverse(root->left);
-        post_order_traverse(root->right);
-        printf("%d ", root->data);
-    }
-}
-
 struct Binary_Tree *Binary_Tree_init() {
     struct Binary_Tree *tree = (struct Binary_Tree *) malloc(sizeof(*tree));
     tree->root = NULL;
@@ -132,9 +185,7 @@ struct Binary_Tree *Binary_Tree_init() {
     tree->insert = &Binary_Tree_insert;
     tree->search = &Binary_Tree_search;
     tree->del = &Binary_Tree_del;
-    tree->pre_order = &pre_order_traverse;
-    tree->in_order = &in_order_traverse;
-    tree->post_order = &post_order_traverse;
+    tree->breadth_first = &Binary_Tree_bf;
     return tree;
 }
 
@@ -152,17 +203,9 @@ int main() {
     tree->insert(tree, 3);
     tree->insert(tree, 4);
 
-    tree->search(tree, 6);
-    tree->search(tree, 9);
+    printf("breadth-first-traversal\n");
+    tree->breadth_first(tree, tree->root);
 
-    tree->pre_order(tree->root);
-    printf("\n");
-    tree->in_order(tree->root);
-    printf("\n");
-    tree->post_order(tree->root);
-    printf("\n");
-
-    printf("total element: %d\n", tree->count);
     tree->del(tree);
     return 0;
 }
