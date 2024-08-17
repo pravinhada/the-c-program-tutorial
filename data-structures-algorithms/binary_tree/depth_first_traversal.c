@@ -38,6 +38,8 @@ void Binary_Tree_insert(struct Binary_Tree *self, int data) {
         exit(0);
     }
     new->data = data;
+    new->left = NULL;
+    new->right = NULL;
     if (self->root == NULL) {
         self->root = new;
         self->count++;
