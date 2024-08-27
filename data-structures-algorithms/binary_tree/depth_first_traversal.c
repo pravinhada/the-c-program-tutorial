@@ -142,7 +142,7 @@ int min_val(struct node *root) {
     if (NULL == root->left)
         return root->data;
     
-    min_val(root->left);
+    return min_val(root->left);
 }
 
 /* find the maximum depth of tree using recursion */
@@ -221,6 +221,7 @@ int main() {
 
     printf("\nin-order-traversal after mirror:\n");
     tree->in_order(tree->root);
+    printf("\n");
 
     tree->del(tree);
     return 0;
