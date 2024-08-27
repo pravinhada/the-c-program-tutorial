@@ -107,7 +107,7 @@ void Binary_Tree_del(struct Binary_Tree *self) {
     free((void *) self);
 }
 
-
+/* pre-order traversal using recursion */
 void pre_order_traverse(struct node *root) {
     if (root == NULL)
         return;
@@ -116,6 +116,7 @@ void pre_order_traverse(struct node *root) {
     pre_order_traverse(root->right);
 }
 
+/* in-order traversal using recursion */
 void in_order_traverse(struct node *root) {
     if (root == NULL)
         return;
@@ -124,12 +125,52 @@ void in_order_traverse(struct node *root) {
     in_order_traverse(root->right);
 }
 
+/* post-order traversal using recursion */
 void post_order_traverse(struct node *root) {
     if (root == NULL)
         return;
     post_order_traverse(root->left);
     post_order_traverse(root->right);
     printf("%d ", root->data);
+}
+
+/* find the minimum value in the tree using recursive */
+int min_val(struct node *root) {
+    if (NULL == root) 
+        return 0;
+    
+    if (NULL == root->left)
+        return root->data;
+    
+    min_val(root->left);
+}
+
+/* find the maximum depth of tree using recursion */
+int max_depth(struct node *root) {
+    if (NULL == root)
+        return 0;
+    
+    if (NULL == root->left && NULL == root->right) 
+        return 0;
+
+    int leftDepth = 1 + max_depth(root->left);
+    int rightDepth = 1 + max_depth(root->right);
+
+    return leftDepth > rightDepth ? leftDepth : rightDepth;
+}
+
+/* mirror the tree using recursion */
+void mirror(struct node *root) {
+    if (NULL == root)
+        return;
+
+    mirror(root->left);
+    mirror(root->right);
+
+    struct node *temp;
+    temp = root->left;
+    root->left = root->right;
+    root->right = temp;
 }
 
 struct Binary_Tree *Binary_Tree_init() {
@@ -155,7 +196,7 @@ int main() {
     tree->insert(tree, 5);
     tree->insert(tree, 8);
     tree->insert(tree, 6);
-    tree->insert(tree, 1);
+    tree->insert(tree, 2);
     tree->insert(tree, 3);
     tree->insert(tree, 4);
 
@@ -171,6 +212,16 @@ int main() {
     printf("\n");
 
     printf("total element: %d\n", tree->count);
+
+    printf("min value: %d\n", min_val(tree->root));
+
+    printf("max depth: %d\n", max_depth(tree->root));
+
+    mirror(tree->root);
+
+    printf("\nin-order-traversal after mirror:\n");
+    tree->in_order(tree->root);
+
     tree->del(tree);
     return 0;
 }
