@@ -136,12 +136,12 @@ void post_order_traverse(struct node *root) {
 
 /* find the minimum value in the tree using recursive */
 int min_val(struct node *root) {
-    if (NULL == root) 
+    if (NULL == root)
         return 0;
-    
+
     if (NULL == root->left)
         return root->data;
-    
+
     return min_val(root->left);
 }
 
@@ -149,8 +149,8 @@ int min_val(struct node *root) {
 int max_depth(struct node *root) {
     if (NULL == root)
         return 0;
-    
-    if (NULL == root->left && NULL == root->right) 
+
+    if (NULL == root->left && NULL == root->right)
         return 0;
 
     int leftDepth = 1 + max_depth(root->left);
@@ -171,6 +171,42 @@ void mirror(struct node *root) {
     temp = root->left;
     root->left = root->right;
     root->right = temp;
+}
+
+int count_trees(int numNodes) {
+    if (numNodes <= 1)
+        return 1;
+
+    int sum = 0;
+    for (int i = 1; i <= numNodes; i++) {
+        int countLeftTrees = count_trees(i - 1);
+        int countRightTrees = count_trees(numNodes - i);
+        sum += countLeftTrees * countRightTrees;
+    }
+    return sum;
+}
+
+void print_range(struct node *root, int low, int high) {
+    if (NULL == root)
+        return;
+
+    if (low <= root->data)
+        print_range(root->left, low, high);
+
+    if (low <= root->data && root->data <= high)
+        printf(" %d ", root->data);
+
+    if (high > root->data)
+        print_range(root->right, low, high);
+}
+
+int is_binary_search_tree(struct node *root, int min, int max) {
+    if (NULL == root)
+        return 1;
+    if (root->data <= min || root->data > max)
+        return 0;
+    return is_binary_search_tree(root->left, min, root->data)
+           && is_binary_search_tree(root->right, root->data, max);
 }
 
 struct Binary_Tree *Binary_Tree_init() {
@@ -213,6 +249,12 @@ int main() {
 
     printf("total element: %d\n", tree->count);
 
+    printf("print range between 4 and 7\n");
+    print_range(tree->root, 4, 7);
+    printf("\n");
+
+    printf("is binary search tree? : %d\n", is_binary_search_tree(tree->root, 1, 9));
+
     printf("min value: %d\n", min_val(tree->root));
 
     printf("max depth: %d\n", max_depth(tree->root));
@@ -222,6 +264,9 @@ int main() {
     printf("\nin-order-traversal after mirror:\n");
     tree->in_order(tree->root);
     printf("\n");
+
+    printf("max number of tree that can be made from 3 is: %d\n", count_trees(3));
+
 
     tree->del(tree);
     return 0;
