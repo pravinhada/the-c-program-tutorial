@@ -11,6 +11,6 @@ int main() {
 }
 
 
-int lower(char c) {
+int lower(const char c) {
     return (c >= 'A' && c <= 'Z') ? (c + 'a' - 'A') : c;
 }

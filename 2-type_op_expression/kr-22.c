@@ -11,10 +11,10 @@ int main() {
 }
 
 int htoi(char s[]) {
-    int i, n, val;
-    n = 0;
+    int val;
+    int n = 0;
 
-    for (i = 0; s[i] != '\0'; ++i) {
+    for (int i = 0; s[i] != '\0'; ++i) {
         if (s[i] >= '0' && s[i] <= '9') {
             val = s[i] - '0';
         } else if (s[i] >= 'a' && s[i] <= 'f') {
