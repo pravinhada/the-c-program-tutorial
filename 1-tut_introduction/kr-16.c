@@ -2,8 +2,8 @@
 
 /* count new lines in input */
 int main() {
-    int c, nl, bl;
-    nl = bl = 0;
+    int c, bl;
+    int nl = bl = 0;
 
     while ((c = getchar()) != EOF) {
         if (c == '\n') {

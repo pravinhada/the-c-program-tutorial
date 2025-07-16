@@ -4,3 +4,5 @@ cc4e_slides
 concat_str.dSYM
 .idea
 .DS_Store
+a.out
+*.dSYM

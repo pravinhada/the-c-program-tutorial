@@ -40,14 +40,13 @@ int main() {
         input[strlen(input) - 1] = 0;
         if (strcmp(input, "done") == 0) {
             break;
-        } else {
-            int a  = atoi(input);
-            if (max == 0 || a > max) {
-                max = a;
-            }
-            if (min == 0 || a < min) {
-                min = a;
-            }
+        }
+        const int a  = atoi(input);
+        if (max == 0 || a > max) {
+            max = a;
+        }
+        if (min == 0 || a < min) {
+            min = a;
         }
     }
     printf("Maximum %d\n", max);
