@@ -76,7 +76,15 @@ void __Map_put(struct Map *self, char *key, int value) {
     }
 
     new = malloc(sizeof(*new));
-    new_key = malloc(sizeof(*new_key));
+    if (!new) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(EXIT_FAILURE);  // Handle malloc failure
+    }
+    new_key = malloc(strlen(key) + 1);
+    if (!new_key) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(EXIT_FAILURE);  // Handle malloc failure
+    }
     strcpy(new_key, key);
     new->key = new_key;
     new->value = value;
@@ -104,6 +112,10 @@ int __Map_get(struct Map *self, char *key, int def) {
 
 struct Map *Map_new() {
     struct Map *p = malloc(sizeof(*p));
+    if (!p) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(EXIT_FAILURE);  // Handle malloc failure
+    }
     p->__head = NULL;
     p->__tail = NULL;
     p->__count = 0;

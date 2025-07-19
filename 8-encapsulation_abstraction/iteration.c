@@ -93,7 +93,15 @@ void __Map_put(struct Map *self, char *key, int value) {
     }
 
     new = malloc(sizeof(*new));
-    new_key = malloc(sizeof(*new_key));
+    if (!new) {
+        fprintf(stderr, "Memory allocation failed for new MapEntry\n");
+        exit(EXIT_FAILURE);  // Handle malloc failure
+    }
+    new_key = malloc(strlen(key) + 1);
+    if (!new_key) {
+        fprintf(stderr, "Memory allocation failed for new_key\n");
+        exit(EXIT_FAILURE);  // Handle malloc failure
+    }
     strcpy(new_key, key);
     new->key = new_key;
     new->value = value;
@@ -120,6 +128,10 @@ struct MapEntry *__MapIter_next(struct MapIter *self) {
 
 struct MapIter *__Map_iter(struct Map *self) {
     struct MapIter *iter = malloc(sizeof(*iter));
+    if (!iter) {
+        fprintf(stderr, "Memory allocation failed for new MapIter\n");
+        exit(EXIT_FAILURE);  // Handle malloc failure
+    }
     iter->__current = self->__head;
     iter->next = &__MapIter_next;
     iter->del = &__MapIter_del;
@@ -128,6 +140,10 @@ struct MapIter *__Map_iter(struct Map *self) {
 
 struct Map *Map_new() {
     struct Map *p = malloc(sizeof(*p));
+    if (!p) {
+        fprintf(stderr, "Memory allocation failed for new Map\n");
+        exit(EXIT_FAILURE);  // Handle malloc failure
+    }
 
     p->__head = NULL;
     p->__tail = NULL;

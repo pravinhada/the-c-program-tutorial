@@ -6,3 +6,4 @@ concat_str.dSYM
 .DS_Store
 a.out
 *.dSYM
+.vscode
