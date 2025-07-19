@@ -37,7 +37,7 @@ char *pystr_str(const struct pystr *self) {
 }
 
 /* x = x + 'h'; */
-void pystr_append(struct pystr *self, char ch) {
+void pystr_append(struct pystr *self, const char ch) {
     if (self->length >= (self->alloc - 2)) {
         self->alloc = self->alloc + 10;
         self->data = realloc(self->data, self->alloc);
@@ -47,7 +47,7 @@ void pystr_append(struct pystr *self, char ch) {
 }
 
 /* x = x + "hello"; */
-void pystr_appends(struct pystr *self, char *str) {
+void pystr_appends(struct pystr *self, const char *str) {
     int i = 0;
     char c;
     while ((c = str[i++]) != '\0')
@@ -55,7 +55,7 @@ void pystr_appends(struct pystr *self, char *str) {
 }
 
 /* x = "hello"; */
-void pystr_assign(struct pystr *self, char *str) {
+void pystr_assign(struct pystr *self, const char *str) {
     self->length = 0;
     pystr_appends(self, str);
 }

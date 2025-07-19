@@ -17,6 +17,10 @@ struct pydict {
 /* Constructor - dct = dict() */
 struct pydict *pydict_new() {
     struct pydict *p = malloc(sizeof(*p));
+    if (NULL == p) {
+        printf("could not allocate memory for pydict\n");
+        exit(0);
+    }
     p->head = NULL;
     p->tail = NULL;
     p->count = 0;
@@ -25,12 +29,11 @@ struct pydict *pydict_new() {
 
 /* Destructor - del(dct) */
 void pydict_del(struct pydict *self) {
-    struct dnode *cur, *next;
-    cur = self->head;
+    struct dnode *cur = self->head;
     while (cur) {
         free(cur->key);
         free(cur->value);
-        next = cur->next;
+        struct dnode *next = cur->next;
         free(cur);
         cur = next;
     }
@@ -39,9 +42,9 @@ void pydict_del(struct pydict *self) {
 
 /* print(dct) */
 /* {'z': 'W', 'y': 'B', 'c': 'C', 'a': 'D'} */
-void pydict_print(struct pydict *self) {
+void pydict_print(const struct pydict *self) {
     if (self->count > 0) {
-        struct dnode *current = self->head;
+        const struct dnode *current = self->head;
         printf("{");
         while (current != NULL) {
             printf("'%s': '%s'%s", current->key, current->value, (current == self->tail) ? "" : ", ");
@@ -56,7 +59,7 @@ int pydict_len(const struct pydict *self) {
 }
 
 /* find a node - used in get and put */
-struct dnode *pydict_find(struct pydict *self, char *key) {
+struct dnode *pydict_find(const struct pydict *self, const char *key) {
     struct dnode *current = self->head;
     while (current != NULL) {
         if (strcmp(current->key, key) == 0)
@@ -67,13 +70,13 @@ struct dnode *pydict_find(struct pydict *self, char *key) {
 }
 
 /* x.get(key) - Returns NULL if not found */
-char *pydict_get(struct pydict *self, char *key) {
-    struct dnode *node = pydict_find(self, key);
+char *pydict_get(const struct pydict *self, const char *key) {
+    const struct dnode *node = pydict_find(self, key);
     return NULL != node ? node->value : NULL;
 }
 
 /* x[key] = value; Insert or replace the value associated with a key */
-void pydict_put(struct pydict *self, char *key, char *value) {
+void pydict_put(struct pydict *self, const char *key, const char *value) {
     struct dnode *node = malloc(sizeof(*node));
     char *k = malloc(sizeof(key));
     char *val = malloc(sizeof(value));
@@ -88,12 +91,12 @@ void pydict_put(struct pydict *self, char *key, char *value) {
         self->tail = node;
         self->count++;
     } else {
-        struct dnode *n = pydict_find(self, key);
+        const struct dnode *n = pydict_find(self, key);
         if (n) {
             strcpy(n->value, value);
         } else {
             struct dnode *current;
-            for (current = self->head; current->next != NULL; current = current->next);
+            for (current = self->head; current->next != NULL; current = current->next) {}
             current->next = node;
             self->tail = node;
             self->count++;
@@ -102,7 +105,6 @@ void pydict_put(struct pydict *self, char *key, char *value) {
 }
 
 int main(void) {
-    struct dnode *cur;
     struct pydict *dct = pydict_new();
 
     setvbuf(stdout, NULL, _IONBF, 0);  /* Internal */
@@ -121,7 +123,7 @@ int main(void) {
     printf("x=%s\n", pydict_get(dct, "x"));
 
     printf("\nDump\n");
-    for (cur = dct->head; cur != NULL; cur = cur->next) {
+    for (const struct dnode *cur = dct->head; cur != NULL; cur = cur->next) {
         printf("%s=%s\n", cur->key, cur->value);
     }
 

@@ -26,7 +26,7 @@ double point_origin(const struct Point *self) {
     return sqrt(self->x * self->x + self->y * self->y);
 }
 
-struct Point *new_point(double x, double y) {
+struct Point *new_point(const double x, const double y) {
     struct Point *p = malloc(sizeof(*p));
     p->x = x;
     p->y = y;
@@ -37,7 +37,7 @@ struct Point *new_point(double x, double y) {
 }
 
 int main() {
-    struct Point *pt = new_point(4.5, 5.0);
+    const struct Point *pt = new_point(4.5, 5.0);
     pt->dump(pt);
     printf("Origin %f\n", pt->origin(pt));
     pt->del(pt);
