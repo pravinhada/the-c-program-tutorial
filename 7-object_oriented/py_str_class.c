@@ -11,15 +11,24 @@ struct pystr
 /* Constructor - x = str() */
 struct pystr * pystr_new() {
     struct pystr *p = malloc(sizeof(*p));
+    if (!p) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(EXIT_FAILURE);  // Handle malloc failure
+    }
     p->length = 0;
     p->alloc = 10;
     p->data = malloc(10);
+    if (!p->data) {
+        free(p);
+        fprintf(stderr, "Memory allocation for data failed\n");
+        exit(EXIT_FAILURE);  // Handle malloc failure
+    }
     p->data[0] = '\0';
     return p;
 }
 
 /* Destructor - del(x) */
-void pystr_del(const struct pystr* self) {
+void pystr_del(struct pystr* self) {
     free(self->data); /* free string first */
     free((void *)self);
 }
@@ -41,7 +50,12 @@ void pystr_append(struct pystr *self, const char ch) {
     /* need about 10 lines of code here */
     if (self->length >= (self->alloc - 2)) {
         self->alloc = self->alloc + 10;
-        self->data = realloc(self->data, self->alloc);
+        char *new_data = realloc(self->data, self->alloc);
+        if (!new_data) {
+            fprintf(stderr, "Memory allocation failed\n");
+            exit(EXIT_FAILURE);  // Handle realloc failure
+        }
+        self->data = new_data;
     }
     self->data[self->length] = ch;
     self->data[++self->length] = '\0';
