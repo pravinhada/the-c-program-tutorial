@@ -30,6 +30,7 @@ void expand(char s[], char t[])
             t[j++] = 't';
             i++;
             break;
+        default: ;
         }
         t[j++] = s[i];
     }

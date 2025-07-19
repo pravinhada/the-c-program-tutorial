@@ -39,6 +39,7 @@ int main() {
             case '*':
                 display = display * value;
                 break;
+            default: ;
         }
 
         printf("Display: %.2f\n", display);

@@ -17,7 +17,7 @@
 /* reverse the string, You can use reverse(s) to reverse a string - make sure you pass a character array and not a string constant to reverse */
 /* pointer implementation */
 void reverse(char t[]) {
-    int len = strlen(t);
+    const int len = strlen(t);
     char *pHead = t;  // points to the first element or array
     char *pTail = t + (len - 1); // points to last element of array
 
@@ -25,7 +25,7 @@ void reverse(char t[]) {
         if (pHead > pTail) {
             break;
         }
-        char temp = *pHead; //swap the first with last and so on.
+        const char temp = *pHead; //swap the first with last and so on.
         *pHead = *pTail;
         *pTail = temp;
         pHead++;
