@@ -3,12 +3,12 @@
 #define LEN 10
 
 int main() {
-    int i, j, v, arr[LEN], result[LEN];
+    int i, v, arr[LEN], result[LEN];
     for (i = 0; i < 10; i++) {
         scanf("%d", &v);
         arr[i] = v;
     }
-    j = 0;
+    int j = 0;
     for (i = LEN - 1; i >= 0; i--) {
         if (arr[i] == 100)
             result[j++] = i;

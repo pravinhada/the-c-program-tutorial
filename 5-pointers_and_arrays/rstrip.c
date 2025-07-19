@@ -3,7 +3,7 @@
 
 /* python rstrip implementation */
 void py_rstrip(char input[]) {
-    int len = strlen(input);
+    const int len = strlen(input);
     char *t = input + len - 1;
     while (*(t) == ' ')
         t--;

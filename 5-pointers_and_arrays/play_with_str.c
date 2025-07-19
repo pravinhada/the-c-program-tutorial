@@ -2,7 +2,7 @@
 #include <string.h>
 
 void process(char line[]) {
-    int len = strlen(line);
+    const int len = strlen(line);
     printf("\nString: %s\n", line);
     printf("Count=%d\n", len);
     for (int i = 0; i < len - 1; i++) {
