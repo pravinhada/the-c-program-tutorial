@@ -22,17 +22,16 @@ static int day_tab[2][13] = {
 };
 
 /* set day of year from month, day */
-int day_of_year(struct simpledate *pd) {
-    int i, leap, day;
-    day = pd->day;
-    leap = pd->year % 4 == 0 && pd->year % 100 != 0 || pd->year % 400 == 0;
-    for (i = 1; i < pd->month; i++)
+int day_of_year(const struct simpledate *pd) {
+    int day = pd->day;
+    const int leap = pd->year % 4 == 0 && pd->year % 100 != 0 || pd->year % 400 == 0;
+    for (int i = 1; i < pd->month; i++)
         day += day_tab[leap][i];
     return day;
 }
 
 /* print date from year, month, day */
-void dump_date(struct simpledate *pd) {
+void dump_date(const struct simpledate *pd) {
     /* The date should be in the following format - note that */
     /* The month and day are always two digits with leading zeros */
     //printf("2023/03/07\n");

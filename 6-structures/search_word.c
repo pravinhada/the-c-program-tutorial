@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-#include "../functions_programs/calculator/getch.c"
+#include "../4-functions_programs/calculator/cal.h"
+#include "../4-functions_programs/calculator/getch.c"
 
 #define MAXWORD 100
 #define NKEYS 13
@@ -26,7 +27,7 @@ struct key {
 
 int getword(char *, int);
 
-struct key *binsearch(char *, struct key *, int);
+struct key *binsearch(const char *, struct key *, int);
 
 int main() {
     struct key *p;
@@ -68,14 +69,13 @@ int getword(char *word, int n) {
     return word[0];
 }
 
-struct key *binsearch(char *word, struct key tab[], int n) {
+struct key *binsearch(const char *word, struct key tab[], const int n) {
     int cond;
     struct key *low = &tab[0];
-    struct key *high = &tab[n - 1];
-    struct key *mid;
+    const struct key *high = &tab[n - 1];
 
     while (low < high) {
-        mid = low + (high - low) / 2;
+        struct key *mid = low + (high - low) / 2;
         if ((cond = strcmp(word, mid->word)) < 0)
             high = mid;
         else if (cond > 0)

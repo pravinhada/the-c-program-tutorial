@@ -11,13 +11,13 @@ struct list {
     struct lnode *tail;
 };
 
-void list_add(struct list *lst, int value) {
+void list_add(struct list *lst, const int value) {
     /* Append the value to the end of the linked list. */
     struct lnode *node = malloc(sizeof(struct lnode));
     node->value = value;
     node->next = NULL;
 
-    if (lst->head == NULL && lst->tail == NULL) {
+    if ((lst->head == NULL && lst->tail == NULL) || lst->head == NULL) {
         lst->head = node;
         lst->tail = node;
     } else {
@@ -30,7 +30,7 @@ void list_add(struct list *lst, int value) {
     }
 }
 
-struct lnode *list_find(struct list *lst, int value) {
+struct lnode *list_find(const struct list *lst, const int value) {
     struct lnode *current = lst->head;
     while (current != NULL) {
         if (current->value == value)
@@ -40,19 +40,17 @@ struct lnode *list_find(struct list *lst, int value) {
     return NULL;
 }
 
-void list_dump(struct list *lst) {
-    struct lnode *cur;
+void list_dump(const struct list *lst) {
     printf("\nDump:\n");
-    for (cur = lst->head; cur != NULL; cur = cur->next) {
+    for (const struct lnode *cur = lst->head; cur != NULL; cur = cur->next) {
         printf("  %d\n", cur->value);
     }
 }
 
-void list_del(struct list *lst) {
+void list_del(const struct list *lst) {
     struct lnode *cur = lst->head;
-    struct lnode *del;
     while (cur != NULL) {
-        del = cur;
+        struct lnode *del = cur;
         cur = cur->next;
         free(del);
     }
@@ -60,7 +58,6 @@ void list_del(struct list *lst) {
 
 int main() {
     struct list mylist;
-    struct lnode *mynode;
 
     mylist.head = NULL;
     mylist.tail = NULL;
@@ -70,7 +67,7 @@ int main() {
     list_add(&mylist, 30);
     list_dump(&mylist);
 
-    mynode = list_find(&mylist, 42);
+    const struct lnode *mynode = list_find(&mylist, 42);
     if (mynode == NULL) {
         printf("Did not find 42\n");
     } else {

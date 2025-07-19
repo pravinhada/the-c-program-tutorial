@@ -11,12 +11,12 @@ struct list {
     struct lnode *tail;
 };
 
-void list_add(struct list *lst, int value) {
+void list_add(struct list *lst, const int value) {
     struct lnode *node = malloc(sizeof(struct lnode));
     node->value = value;
     node->next = NULL;
 
-    if (lst->head == NULL && lst->tail == NULL) {
+    if ((lst->head == NULL && lst->tail == NULL) || lst->head == NULL) {
         lst->head = node;
         lst->tail = node;
     } else {
@@ -29,16 +29,15 @@ void list_add(struct list *lst, int value) {
     }
 }
 
-void list_remove(struct list *lst, int value) {
+void list_remove(struct list *lst, const int value) {
     struct lnode *current = lst->head;
-    struct lnode *prev;
 
     if (lst->head->value == value) {
         lst->head = current->next;
         free(current);
         current = NULL;
     } else {
-        prev = current;
+        struct lnode *prev = current;
         current = current->next;
         while (current != NULL) {
             if (current->value == value) {
@@ -58,9 +57,8 @@ void list_dump(struct list *lst) {
         printf("List is empty!\n");
         return;
     }
-    struct lnode *current;
     printf("\nDump:\n");
-    for (current = lst->head; current != NULL; current = current->next) {
+    for (const struct lnode *current = lst->head; current != NULL; current = current->next) {
         printf("  %d\n", current->value);
     }
 }
