@@ -6,13 +6,14 @@
 int sumseries(int n) {
     if (n <= 0) {
         return 0;
-    } else if (n > 100) {
-        return -1;
-    } else if (n == 1) {
-        return 1;
-    } else {
-        return (n + sumseries(n - 1));
     }
+    if (n > 100) {
+        return -1;
+    }
+    if (n == 1) {
+        return 1;
+    }
+    return (n + sumseries(n - 1));
 }
 
 int main() {

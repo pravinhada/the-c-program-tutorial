@@ -14,7 +14,7 @@ int main() {
     char line[256];
     char memory[256];
     char opcode;
-    int count, address, value;
+    int address, value;
 
     while (fgets(line, 256, stdin) != NULL) {
         //printf("\nLine: %s\n", line);
@@ -23,7 +23,7 @@ int main() {
             //printf("%s\n", line);
             continue;
         }
-        count = sscanf(line, "%d %c %d", &address, &opcode, &value);
+        const int count = sscanf(line, "%d %c %d", &address, &opcode, &value);
         if (count != 3) continue;
         //printf("address: %d opcode: %c value: %d\n", address, opcode, value);
 
@@ -38,6 +38,7 @@ int main() {
             case '=':
                 memory[address] = value;
                 break;
+            default: ;
         }
 
         //printf("Memory:\n%s\n", memory);
