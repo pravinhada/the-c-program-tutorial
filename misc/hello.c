@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+enum week {Mon = 1, Tue, Wed, Thu, Fri, Sat, Sun} day;
+
 /* this is simple c program printing hello world!*/
 int main() {
     char hello[] = "Hello, World!\n";
@@ -47,4 +49,38 @@ int main() {
     b = 1;
     a += ++b;
     printf("value of a after the code execute is %d\n", a);
+
+    scanf("%d", &day);
+    switch (day) { 
+        case Mon:
+            printf("Monday\n");
+            break;
+        case Tue:
+            printf("Tuesday\n");    
+            break;
+        case Wed:   
+            printf("Wednesday\n");
+            break;
+        case Thu:
+            printf("Thursday\n");
+            break;
+        case Fri:
+            printf("Friday\n");
+            break;
+        case Sat:
+            printf("Saturday\n");
+            break;
+        case Sun:
+            printf("Sunday\n");
+            break;
+        default:
+            printf("Invalid day\n");
+    }
+
+    printf("File :%s\n", __FILE__);
+    printf("Date :%s\n", __DATE__);
+    printf("Time :%s\n", __TIME__);
+    printf("Line :%d\n", __LINE__);
+    printf("ANSI :%d\n", __STDC__);
+
 }

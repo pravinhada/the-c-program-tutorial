@@ -4,7 +4,7 @@
 
 char *combineString(const char *p1, const char *p2) {
 
-    if (NULL == p1 && NULL == p2) {
+    if (!p1 && !p2) {
         return NULL;
     }
 
@@ -21,7 +21,7 @@ char *combineString(const char *p1, const char *p2) {
 int main() {
     char *presult = combineString("Hello ", "World!");
 
-    if (NULL != presult) {
+    if (presult) {
         printf("%s\n", presult);
 
         free(presult); // free memory and set to NULL
