@@ -10,10 +10,10 @@ int main(int argc, char *argv[]) {
 
     char *filename = argv[1];
     char *keyword = argv[2];
-    int len = strlen(keyword);
+    const int len = strlen(keyword);
 
     FILE *pFile = fopen(filename, "r");
-    if (pFile == NULL) {
+    if (!pFile) {
         printf("File name %s is not found\n", filename);
         return 0;
     }

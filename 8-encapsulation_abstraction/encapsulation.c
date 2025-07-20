@@ -20,7 +20,7 @@ struct Map {
 
     int (*get)(struct Map *self, char *key, int def);
 
-    int (*size)(struct Map *self);
+    int (*size)(const struct Map *self);
 
     void (*dump)(struct Map *self);
 
@@ -28,59 +28,54 @@ struct Map {
 };
 
 void __Map_del(struct Map *self) {
-    struct MapEntry *cur, *next;
-    cur = self->__head;
+    struct MapEntry *cur = self->__head;
     while (cur) {
         free(cur->key);
         /* value is just part of the struct */
-        next = cur->__next;
+        struct MapEntry *next = cur->__next;
         free(cur);
         cur = next;
     }
-    free((void *) self);
+    free(self);
 }
 
-void __Map_dump(struct Map *self) {
-    struct MapEntry *cur;
+void __Map_dump(const struct Map *self) {
     printf("Object Map count=%d\n", self->__count);
-    for (cur = self->__head; cur != NULL; cur = cur->__next) {
+    for (const struct MapEntry *cur = self->__head; cur != NULL; cur = cur->__next) {
         printf("  %s=%d\n", cur->key, cur->value);
     }
 }
 
 struct MapEntry *__Map_find(struct Map *self, char *key) {
-    struct MapEntry *cur;
     if (self == NULL || key == NULL)
         return NULL;
-    for (cur = self->__head; cur != NULL; cur = cur->__next) {
+    for (struct MapEntry *cur = self->__head; cur != NULL; cur = cur->__next) {
         if (strcmp(key, cur->key) == 0)
             return cur;
     }
     return NULL;
 }
 
-int __Map_size(struct Map *self) {
+int __Map_size(const struct Map *self) {
     return self->__count;
 }
 
-void __Map_put(struct Map *self, char *key, int value) {
-    struct MapEntry *old, *new;
+void __Map_put(struct Map *self, char *key, const int value) {
     struct MapEntry *curr;
-    char *new_key;
     if (key == NULL) return;
 
-    old = __Map_find(self, key);
+    struct MapEntry *old = __Map_find(self, key);
     if (old != NULL) {
         old->value = value;
         return;
     }
 
-    new = malloc(sizeof(*new));
+    struct MapEntry *new = malloc(sizeof(*new));
     if (!new) {
         fprintf(stderr, "Memory allocation failed\n");
         exit(EXIT_FAILURE);  // Handle malloc failure
     }
-    new_key = malloc(strlen(key) + 1);
+    char *new_key = malloc(strlen(key) + 1);
     if (!new_key) {
         fprintf(stderr, "Memory allocation failed\n");
         exit(EXIT_FAILURE);  // Handle malloc failure
@@ -103,7 +98,7 @@ void __Map_put(struct Map *self, char *key, int value) {
 }
 
 int __Map_get(struct Map *self, char *key, int def) {
-    struct MapEntry *old = __Map_find(self, key);
+    const struct MapEntry *old = __Map_find(self, key);
     if (old == NULL)
         return def;
     else

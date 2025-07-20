@@ -8,7 +8,7 @@
 
 #define MAX(x, y)   ((x) > (y) ? (x) : (y))
 
-inline int max(int a, int b) {
+inline int max(const int a, const int b) {
     return (a > b) ? a : b;
 }
 
@@ -17,7 +17,7 @@ inline int max(int a, int b) {
 int main() {
     printf("Welcome to my latest version %s\n", PROGRAM_VERSION);
 
-    int c = SUM(5, 5);
+    const int c = SUM(5, 5);
 
     printf("SUM macro result = %d\n", c);
     printf("MAX of 3 and 4 is = %d\n", MAX(3, 4));

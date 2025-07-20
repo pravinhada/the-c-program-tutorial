@@ -7,16 +7,18 @@ struct Point {
 
 struct Point p1, p2;
 
-void printPoint(struct Point p) {
+void printPoint(const struct Point p) {
     printf("x = %f, y = %f\n", p.x, p.y);
 }
 
+// pass by value
 void changePoint(struct Point p) {
     p.x = 15;
     p.y = 25;
 }
 
-void changPointAgain(struct Point *p) {
+// pass by reference
+void changePointAgain(struct Point *p) {
     p->x = 30;
     p->y = 40;
 }
@@ -28,7 +30,7 @@ int main() {
     printPoint(p1);
     changePoint(p1);
     printPoint(p1);
-    changPointAgain(&p1);
+    changePointAgain(&p1);
     printPoint(p1);
 
     printf("Size of Point is %lu bytes\n", sizeof(p1));
