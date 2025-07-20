@@ -37,10 +37,10 @@ int main() {
 }
 
 int readlines(char *lineptr[], int maxlines) {
-    int len, nlines;
+    int len;
     char *p, line[MAXLEN];
 
-    nlines = 0;
+    int nlines = 0;
     while ((len = getlines(line, MAXLEN)) > 0) {
         if (nlines >= maxlines)
             return -1;
@@ -56,9 +56,8 @@ int readlines(char *lineptr[], int maxlines) {
 }
 
 void writelines(char *lineptr[], int nlines) {
-    int i;
     printf("\n");
-    for (i = 0; i < nlines; i++) {
+    for (int i = 0; i < nlines; i++) {
         printf("%s\n", lineptr[i]);
         freebuf(lineptr[i]);
     }
@@ -66,13 +65,11 @@ void writelines(char *lineptr[], int nlines) {
 
 /* qsort: sort v[left] ... v[right] into increasing order */
 void qsort(char *lineptr[], int left, int right) {
-    int i, last;
-
     if (left >= right)
         return;
     swap(lineptr, left, (left + right) / 2);
-    last = left;
-    for (i = left + 1; i <= right; i++) {
+    int last = left;
+    for (int i = left + 1; i <= right; i++) {
         if (strcmp(lineptr[i], lineptr[left]) < 0)
             swap(lineptr, ++last, i);
     }
@@ -82,25 +79,24 @@ void qsort(char *lineptr[], int left, int right) {
 }
 
 void swap(char *lineptr[], int i, int j) {
-    char *temp;
-    temp = lineptr[i];
+    char *temp = lineptr[i];
     lineptr[i] = lineptr[j];
     lineptr[j] = temp;
 }
 
-int getlines(char s[], int lim) {
-    int c, i;
+int getlines(char a[], const int lim) {
+    int c = 0, i;
     for (i = 0; i < lim - 1 && (c = getchar()) != EOF && c != '\n'; i++) {
-        s[i] = c;
+        a[i] = c;
     }
     if (c == '\n')
-        s[i++] = c;
+        a[i++] = c;
 
-    s[i] = '\0';
+    a[i] = '\0';
     return i;
 }
 
-char *alloc(int n) {
+char *alloc(const int n) {
     if (allocp + n <= allocbuf + MAXLEN) {
         allocp += n;
         return (allocp - n);

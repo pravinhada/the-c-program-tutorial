@@ -3,7 +3,7 @@
 
 /* using array */
 void modify(char a[]) {
-    int len = strlen(a);
+    const int len = strlen(a);
     for (int i = 0; i < len - 1; i++) {
         if (a[i] == 'o') {
             a[i] = 'e';
@@ -13,7 +13,7 @@ void modify(char a[]) {
 
 /* using pointer */
 void modifyAgain(char *s) {
-    while (*s) {    // if we do while(s) {} then it will be segfault since address s can go on an on
+    while (*s) {    // if we do while(s) {} then it will be segfault since address s can go on and on
         if (*s == 'e') {
             *s = 'o';
         }

@@ -7,7 +7,7 @@ struct Rectangle {
 typedef struct Rectangle RECT;
 
 int main() {
-    RECT r1, r2;
+    RECT r1;
     r1.x1 = 1;
     r1.y1 = 1;
     r1.x2 = 4;
