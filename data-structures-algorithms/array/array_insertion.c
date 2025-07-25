@@ -5,7 +5,9 @@
 /* takes O(n) to insert an element */
 int main() {
     int arr[MAX] = {1, 2, 5, 7, 8};
-    int new_item = 10, pos = 3, n = 5;
+    const int new_item = 10;
+    const int pos = 3;
+    int n = 5;
     int i = 0, j = n;
 
     printf("the original array element: \n");

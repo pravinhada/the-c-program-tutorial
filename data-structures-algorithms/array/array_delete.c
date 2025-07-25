@@ -5,13 +5,13 @@
 int main() {
     int arr[MAX] = {1, 2, 5, 7, 8};
     int index;
-    int i = 0, len;
+    int i = 0;
 
     printf("the original array element: \n");
     print(arr);
 
     while (1) {
-        len = count(arr);
+        const int len = count(arr);
         if (len <= 0) { /* one element is for '\0' */
             printf("array is empty\n");
             break;
