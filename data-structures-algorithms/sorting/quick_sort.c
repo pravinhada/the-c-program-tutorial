@@ -6,7 +6,7 @@
 /* it is preferred to merge sort */
 
 void swap(int *a, int *b) {
-    int temp = *a;
+    const int temp = *a;
     *a = *b;
     *b = temp;
 }
@@ -18,8 +18,8 @@ void print(int arr[]) {
     printf("\n");
 }
 
-int partition(int arr[], int low, int high) {
-    int pivot = arr[low];
+int partition(int arr[], const int low, const int high) {
+    const int pivot = arr[low];
     int l = low;
     int h = high;
 
@@ -38,10 +38,10 @@ int partition(int arr[], int low, int high) {
     return h;
 }
 
-void quick_sort(int arr[], int low, int high) {
+void quick_sort(int arr[], const int low, const int high) {
     if (low >= high) return;
 
-    int pivot = partition(arr, low, high);
+    const int pivot = partition(arr, low, high);
     quick_sort(arr, low, pivot - 1);
     quick_sort(arr, pivot + 1, high);
 }

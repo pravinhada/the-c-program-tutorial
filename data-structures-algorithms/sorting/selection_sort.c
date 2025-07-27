@@ -6,13 +6,12 @@
 
 /* swap using pointer */
 void swap(int *a, int *b) {
-    int temp;
-    temp = *a;
+    const int temp = *a;
     *a = *b;
     *b = temp;
 }
 
-void print(int a[], int size) {
+void print(int a[], const int size) {
     for (int i = 0; i < size; i++) {
         printf(" %d", a[i]);
     }
@@ -20,10 +19,10 @@ void print(int a[], int size) {
 }
 
 /* O(n^2) complexity */
-void selection_sort(int s[], int size) {
-    int i, j;
-    for (i = 0; i < size; i++) {
-        for (j = i + 1; j < size; j++) {
+void selection_sort(int s[], const int size) {
+    print(s, size);
+    for (int i = 0; i < size; i++) {
+        for (int j = i + 1; j < size; j++) {
             if (s[i] > s[j]) {
                 swap(&s[i], &s[j]);
             }
@@ -34,7 +33,7 @@ void selection_sort(int s[], int size) {
 
 int main() {
     int data[] = {5, 10, 4, 7, 2, 8, 3, 9, 1, 6};
-    int size = sizeof(data) / sizeof(data[0]);
+    const int size = sizeof(data) / sizeof(data[0]);
     selection_sort(data, size);
     return 0;
 }

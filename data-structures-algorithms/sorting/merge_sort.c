@@ -4,11 +4,11 @@
 
 /* O(nlogn) time complexity, with additional space requirement */
 
-void merge(int arr[], int low, int mid, int high) {
+void merge(int arr[], const int low, const int mid, const int high) {
     int i, j, k;
 
-    int s1 = mid - low + 1;
-    int s2 = high - mid;
+    const int s1 = mid - low + 1;
+    const int s2 = high - mid;
 
     /* temporary array */
     int left[s1];
@@ -47,11 +47,9 @@ void merge(int arr[], int low, int mid, int high) {
     }
 }
 
-void merge_sort(int arr[], int low, int high) {
-    int mid;
-    if (low < high)
-    {
-        mid = (low + high) / 2;
+void merge_sort(int arr[], const int low, const int high) {
+    if (low < high) {
+        const int mid = (low + high) / 2;
         merge_sort(arr, low, mid);
         merge_sort(arr, mid + 1, high);
         merge(arr, low, mid, high);

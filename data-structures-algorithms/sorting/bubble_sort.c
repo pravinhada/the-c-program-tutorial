@@ -6,23 +6,21 @@
  * if no swap occurred in a loop, then it's considered to be sorted */
 
 void swap(int *a, int *b) {
-    int temp;
-    temp = *a;
+    const int temp = *a;
     *a = *b;
     *b = temp;
 }
 
-void print(int a[], int size) {
+void print(int a[], const int size) {
     for (int i = 0; i < size; i++) {
         printf(" %d", a[i]);
     }
     printf("\n");
 }
 
-void bubble_sort(int a[], int size) {
-    int isSwapped;
+void bubble_sort(int a[], const int size) {
     for (int i = 0; i < size; i++) {
-        isSwapped = 0;
+        int isSwapped = 0;
         for (int j = size - 1; j > i; j--) {
             if (a[j] < a[j - 1]) {
                 swap(&a[j], &a[j - 1]);
@@ -37,7 +35,7 @@ void bubble_sort(int a[], int size) {
 
 int main() {
     int data[] = {5, 10, 4, 7, 2, 8, 3, 9, 1, 6};
-    int size = sizeof(data) / sizeof(data[0]);
+    const int size = sizeof(data) / sizeof(data[0]);
     bubble_sort(data, size);
     return 0;
 }
