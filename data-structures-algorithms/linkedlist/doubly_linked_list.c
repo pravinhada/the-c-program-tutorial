@@ -21,30 +21,28 @@ struct DoublyLinkedList {
     struct lnode *tail;
     int count;
 
-    void (*append)(struct DoublyLinkedList *self, char *data);
+    void (*append)(struct DoublyLinkedList *self, const char *data);
 
-    void (*prepend)(struct DoublyLinkedList *self, char *data);
+    void (*prepend)(struct DoublyLinkedList *self, const char *data);
 
-    void (*remove)(struct DoublyLinkedList *self, char *keyword);
+    void (*remove)(struct DoublyLinkedList *self, const char *keyword);
 
     void (*clean)(struct DoublyLinkedList *self);
 
-    int (*length)(struct DoublyLinkedList *self);
+    int (*length)(const struct DoublyLinkedList *self);
 
-    void (*display)(struct DoublyLinkedList *self);
+    void (*display)(const struct DoublyLinkedList *self);
 
-    struct lnode *(*find)(struct DoublyLinkedList *self, char *keyword);
+    struct lnode *(*find)(const struct DoublyLinkedList *self, const char *keyword);
 
-    void (*reverse)(struct DoublyLinkedList *self);
+    void (*reverse)(const struct DoublyLinkedList *self);
 
-    struct ListIter *(*iter)(struct DoublyLinkedList *self);
+    struct ListIter *(*iter)(const struct DoublyLinkedList *self);
 };
 
 /* complexity of O(n) time to add new data in worst case */
-void __DoublyLinkedList_append(struct DoublyLinkedList *self, char *data) {
-    struct lnode *cur, *new_node;
-
-    new_node = malloc(sizeof(*new_node));
+void __DoublyLinkedList_append(struct DoublyLinkedList *self, const char *data) {
+    struct lnode *new_node = malloc(sizeof(*new_node));
     char *new_data = malloc(sizeof(*new_data));
     strcpy(new_data, data);
     new_node->data = new_data;
@@ -56,7 +54,7 @@ void __DoublyLinkedList_append(struct DoublyLinkedList *self, char *data) {
         self->head = new_node;
         self->tail = new_node;
     } else {
-        cur = self->head;
+        struct lnode *cur = self->head;
         while (cur->next != NULL)
             cur = cur->next;
 
@@ -68,8 +66,8 @@ void __DoublyLinkedList_append(struct DoublyLinkedList *self, char *data) {
 }
 
 /* this should be constant time complexity O(n), since it add at the beginning */
-void __DoublyLinkedList_prepend(struct DoublyLinkedList *self, char *data) {
-    struct lnode *new_node = (struct lnode *) malloc(sizeof(*new_node));
+void __DoublyLinkedList_prepend(struct DoublyLinkedList *self, const char *data) {
+    struct lnode *new_node = malloc(sizeof(*new_node));
     char *new_data = malloc(sizeof(*new_data));
 
     strcpy(new_data, data);
@@ -89,12 +87,11 @@ void __DoublyLinkedList_prepend(struct DoublyLinkedList *self, char *data) {
 }
 
 /* this is in an order of O(n) complexity, this depends on search function */
-void __DoublyLinkedList_remove(struct DoublyLinkedList *self, char *keyword) {
-    struct lnode *prev, *next;
+void __DoublyLinkedList_remove(struct DoublyLinkedList *self, const char *keyword) {
     struct lnode *result = self->find(self, keyword);
     if (result != NULL) {
-        prev = result->prev;
-        next = result->next;
+        struct lnode *prev = result->prev;
+        struct lnode *next = result->next;
         prev->next = next;
         next->prev = prev;
         free(result->data);
@@ -104,25 +101,24 @@ void __DoublyLinkedList_remove(struct DoublyLinkedList *self, char *keyword) {
 }
 
 void __DoublyLinkedList_clean(struct DoublyLinkedList *self) {
-    struct lnode *cur, *next;
-    cur = self->head;
+    struct lnode *cur = self->head;
 
     while (cur != NULL) {
         free(cur->data);
-        next = cur->next;
+        struct lnode *next = cur->next;
         free(cur);
         cur = next;
     }
-    free((void *) self);
+    free(self);
 }
 
-int __DoublyLinkedList_length(struct DoublyLinkedList *self) {
+int __DoublyLinkedList_length(const struct DoublyLinkedList *self) {
     return self->count;
 }
 
-void __DoublyLinkedList_display(struct DoublyLinkedList *self) {
+void __DoublyLinkedList_display(const struct DoublyLinkedList *self) {
     printf("Displaying content of DoublyLinkedList:\n");
-    struct lnode *cur = self->head;
+    const struct lnode *cur = self->head;
     while (cur != NULL) {
         printf("(%s) ", cur->data);
         cur = cur->next;
@@ -131,7 +127,7 @@ void __DoublyLinkedList_display(struct DoublyLinkedList *self) {
 }
 
 /* complexity of O(n) to search in worse case */
-struct lnode *__DoublyLinkedList_find(struct DoublyLinkedList *self, char *keyword) {
+struct lnode *__DoublyLinkedList_find(const struct DoublyLinkedList *self, const char *keyword) {
     struct lnode *cur = self->head;
     while (cur->next != NULL) {
         if (strcmp(cur->data, keyword) == 0)
@@ -142,16 +138,15 @@ struct lnode *__DoublyLinkedList_find(struct DoublyLinkedList *self, char *keywo
 }
 
 /* O(n) time to reverse, backward */
-void __DoublyLinkedList_reverse(struct DoublyLinkedList *self) {
-    struct lnode *cur;
-    for (cur = self->tail; cur != NULL; cur = cur->prev)
+void __DoublyLinkedList_reverse(const struct DoublyLinkedList *self) {
+    for (const struct lnode *cur = self->tail; cur != NULL; cur = cur->prev)
         printf("(%s) ", cur->data);
 
     printf("\n");
 }
 
 void __ListIter_del(struct ListIter *self) {
-    free((void *) self);
+    free(self);
 }
 
 struct lnode *__ListIter_next(struct ListIter *self) {
@@ -161,8 +156,8 @@ struct lnode *__ListIter_next(struct ListIter *self) {
     return result;
 }
 
-struct ListIter *__List_iter(struct DoublyLinkedList *self) {
-    struct ListIter *new = (struct ListIter *) malloc(sizeof(*new));
+struct ListIter *__List_iter(const struct DoublyLinkedList *self) {
+    struct ListIter *new = malloc(sizeof(*new));
     new->current = self->head;
     new->next = &__ListIter_next;
     new->del = &__ListIter_del;
@@ -170,7 +165,7 @@ struct ListIter *__List_iter(struct DoublyLinkedList *self) {
 }
 
 struct DoublyLinkedList *__DoublyLinkedList_new() {
-    struct DoublyLinkedList *new = (struct DoublyLinkedList *) malloc(sizeof(*new));
+    struct DoublyLinkedList *new = malloc(sizeof(*new));
     new->head = NULL;
     new->tail = NULL;
     new->append = &__DoublyLinkedList_append;
@@ -187,8 +182,6 @@ struct DoublyLinkedList *__DoublyLinkedList_new() {
 
 int main() {
     struct DoublyLinkedList *list = __DoublyLinkedList_new();
-    struct lnode *search, *cur;
-    struct ListIter *iter;
     list->append(list, "a");
     list->append(list, "b");
     list->append(list, "c");
@@ -198,7 +191,7 @@ int main() {
     printf("total element of DoublyLinkedList: %d\n", list->length(list));
     list->display(list);
 
-    search = list->find(list, "d");
+    const struct lnode *search = list->find(list, "d");
     if (NULL != search)
         printf("found element: %s\n", search->data);
     else
@@ -222,9 +215,9 @@ int main() {
     printf("total element in DoublyLinkedList is %d\n", list->length(list));
 
     printf("iterating list:\n");
-    iter = list->iter(list);
+    struct ListIter *iter = list->iter(list);
     while (1) {
-        cur = iter->next(iter);
+        struct lnode *cur = iter->next(iter);
         if (cur == NULL) break;
         printf("\t (%s)\n", cur->data);
     }
