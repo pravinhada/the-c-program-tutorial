@@ -55,13 +55,16 @@ int Stack_peek(const struct Stack *self) {
 }
 
 void Stack_del(struct Stack *self) {
+    if (NULL == self)
+        return;
     struct Element *cur = self->top;
     while (cur != NULL) {
         struct Element *next = cur->next;
         free(cur);
         cur = next;
     }
-    free((void *) self);
+    self->top = NULL;
+    self->count = 0;
 }
 
 int Stack_length(const struct Stack *self) {
@@ -113,6 +116,11 @@ int main() {
     printf("minimum is: %d\n", Stack_peek(stack2));
 
     Stack_del(stack1);
+    free(stack1);
+    stack1 = NULL;
+
     Stack_del(stack2);
+    free(stack2);
+    stack2 = NULL;
     return 0;
 }
