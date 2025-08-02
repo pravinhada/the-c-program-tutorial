@@ -13,14 +13,13 @@ struct Stack {
     int count;
 };
 
-void Stack_push(struct Stack *self, int input) {
-    struct Element *element;
+void Stack_push(struct Stack *self, const int input) {
     if (self->count > MAX_SIZE) {
         printf("Stack overflow\n");
         return;
     }
 
-    element = (struct Element *) malloc(sizeof(*element));
+    struct Element *element = malloc(sizeof(*element));
     element->data = input;
 
     element->next = self->top;
@@ -29,14 +28,12 @@ void Stack_push(struct Stack *self, int input) {
 }
 
 int Stack_pop(struct Stack *self) {
-    int data;
-    struct Element *cur;
     if (self == NULL || self->top == NULL) {
         printf("Stack underflow\n");
         return 0;
     }
-    cur = self->top;
-    data = cur->data;
+    struct Element *cur = self->top;
+    const int data = cur->data;
     self->top = cur->next;
     free(cur);
     printf("popped: [%d]\n", data);
@@ -44,7 +41,7 @@ int Stack_pop(struct Stack *self) {
     return data;
 }
 
-int Stack_peek(struct Stack *self) {
+int Stack_peek(const struct Stack *self) {
     if (self->count == 0) {
         printf("Stack is empty!\n");
         return 0;
@@ -53,25 +50,23 @@ int Stack_peek(struct Stack *self) {
 }
 
 void Stack_del(struct Stack *self) {
-    struct Element *cur, *next;
-    cur = self->top;
+    struct Element *cur = self->top;
     while (cur != NULL) {
-        next = cur->next;
+        struct Element *next = cur->next;
         free(cur);
         cur = next;
     }
-    free((void *) self);
+    free(self);
 }
 
-int Stack_length(struct Stack *self) {
+int Stack_length(const struct Stack *self) {
     if (self == NULL) return 0;
     return self->count;
 }
 
-void Stack_display(struct Stack *self) {
-    struct Element *cur;
+void Stack_display(const struct Stack *self) {
     if (self == NULL || self->count == 0) return;
-    cur = self->top;
+    const struct Element *cur = self->top;
     printf("Displaying contain of Stack:\n");
     while (cur != NULL) {
         printf("[%d]\n", cur->data);
@@ -80,7 +75,7 @@ void Stack_display(struct Stack *self) {
 }
 
 struct Stack *Stack_init(void) {
-    struct Stack *stack = (struct Stack *) malloc(sizeof(*stack));
+    struct Stack *stack = malloc(sizeof(*stack));
     stack->count = 0;
     stack->top = NULL;
     return stack;
