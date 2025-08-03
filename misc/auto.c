@@ -7,12 +7,12 @@ void printNumber() {
 }
 
 int main() {
-    int auto n = 100; //automatically allocated and deallocated in stack, optional
+    const int auto n = 100; //automatically allocated and deallocated in stack, optional
 
     printf("n = %d\n", n);
 
-    register int i; // only recommendation from us to compiler, can't reference, stores in register memory
-    for (i = 0; i < 100; i++) {
+    // only recommendation from us to compiler, can't reference, stores in register memory
+    for (register int i = 0; i < 100; i++) {
         printf("i = %d\n", i);
     }
     printNumber();

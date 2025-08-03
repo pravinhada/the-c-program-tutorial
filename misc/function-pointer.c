@@ -1,23 +1,23 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-void function(int x) {
+void function(const int x) {
     printf("x: %d\n", x);
 }
 
-int add(int x, int y) {
+int add(const int x, const int y) {
     return x + y;
 }
 
-int subtract(int x, int y) {
+int subtract(const int x, const int y) {
     return x - y;
 }
 
-int multiply(int x, int y) {
+int multiply(const int x, const int y) {
     return x * y;
 }
 
-int divide(int x, int y) {
+int divide(const int x, const int y) {
     return x / y;
 }
 
@@ -45,11 +45,11 @@ int (*select_operation())(int, int) {
     }
 }
 
-bool freeze_c(int temperature) {
+bool freeze_c(const int temperature) {
     return temperature <= 0;
 }
 
-bool freeze_f(int temperature) {
+bool freeze_f(const int temperature) {
     return temperature <= 32;
 }
 
@@ -73,11 +73,11 @@ int main() {
     function_pointer(4); // same
 
     int (*add_pointer)(int, int) = &add;
-    int result = (*add_pointer)(30, 40);
+    const int result = (*add_pointer)(30, 40);
     printf("result is %d\n", result);
 
     int (*array[])(int, int) = {add, subtract, multiply};
-    int product = (*array[1])(3, 4);
+    const int product = (*array[1])(3, 4);
 
     printf("product is: %d\n", product);
 

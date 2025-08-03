@@ -2,8 +2,7 @@
 
 // count the character in line
 int main() {
-    long nc;
-    nc = 0;
+    long nc = 0;
     while (getchar() != EOF) {
         ++nc;
     }

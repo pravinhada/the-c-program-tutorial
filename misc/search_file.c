@@ -44,4 +44,5 @@ int main(int argc, char *argv[]) {
     printf("\nFound %d no of %s", found, keyword);
     fclose(pFile);
     pFile = NULL;
+    return 0;
 }

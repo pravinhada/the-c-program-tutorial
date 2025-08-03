@@ -29,7 +29,7 @@ int main() {
     #elif defined(LINUX)
         printf("Hello from linux\n");
     #else
-        printf("YOur are not in any platform\n");
+        printf("You are not in any platform\n");
     #endif
 
 

@@ -8,24 +8,24 @@ char *combineString(const char *p1, const char *p2) {
         return NULL;
     }
 
-    int size = strlen(p1) + strlen(p2);
-    char *presult = (char *) malloc(sizeof(char) * (size + 1)); // dynamically allocate memory
+    const int size = strlen(p1) + strlen(p2);
+    char *pResult = malloc(sizeof(char) * (size + 1)); // dynamically allocate memory
 
     //strcpy(presult, p1);
     //strcat(presult, p2);
-    sprintf(presult, "%s%s", p1, p2);
-    return presult;
+    sprintf(pResult, "%s%s", p1, p2);
+    return pResult;
 }
 
 
 int main() {
-    char *presult = combineString("Hello ", "World!");
+    char *pResult = combineString("Hello ", "World!");
 
-    if (presult) {
-        printf("%s\n", presult);
+    if (pResult) {
+        printf("%s\n", pResult);
 
-        free(presult); // free memory and set to NULL
-        presult = NULL;
+        free(pResult); // free memory and set to NULL
+        pResult = NULL;
     }
     return 0;
 }

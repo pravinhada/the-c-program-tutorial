@@ -13,15 +13,14 @@ struct Stack {
     int count;
 };
 
-void Stack_push(struct Stack *self, char input) {
-    struct Element *element;
+void Stack_push(struct Stack *self, const char input) {
     if (self == NULL) return;
     if (self->count > MAX_SIZE) {
         printf("Stack overflow\n");
         return;
     }
 
-    element = (struct Element *) malloc(sizeof(*element));
+    struct Element *element = malloc(sizeof(*element));
     element->data = input;
 
     element->next = self->top;
@@ -30,21 +29,19 @@ void Stack_push(struct Stack *self, char input) {
 }
 
 char Stack_pop(struct Stack *self) {
-    char data;
-    struct Element *cur;
     if (self == NULL || self->top == NULL) {
         printf("Stack underflow\n");
         return 0;
     }
-    cur = self->top;
-    data = cur->data;
+    struct Element *cur = self->top;
+    const char data = cur->data;
     self->top = cur->next;
     free(cur);
     self->count--;
     return data;
 }
 
-char Stack_peek(struct Stack *self) {
+char Stack_peek(const struct Stack *self) {
     if (self == NULL || self->top == NULL) {
         printf("Stack underflow\n");
         return 0;
@@ -57,25 +54,23 @@ char Stack_peek(struct Stack *self) {
 }
 
 void Stack_del(struct Stack *self) {
-    struct Element *cur, *next;
-    cur = self->top;
+    struct Element *cur = self->top;
     while (cur != NULL) {
-        next = cur->next;
+        struct Element *next = cur->next;
         free(cur);
         cur = next;
     }
-    free((void *) self);
+    free(self);
 }
 
-int Stack_length(struct Stack *self) {
+int Stack_length(const struct Stack *self) {
     if (self == NULL) return 0;
     return self->count;
 }
 
-void Stack_display(struct Stack *self) {
-    struct Element *cur;
+void Stack_display(const struct Stack *self) {
     if (self == NULL || self->count == 0) return;
-    cur = self->top;
+    const struct Element *cur = self->top;
     printf("Displaying contain of Stack:\n");
     while (cur != NULL) {
         printf("[%d]\n", cur->data);
@@ -84,12 +79,16 @@ void Stack_display(struct Stack *self) {
 }
 
 struct Stack *Stack_init(void) {
-    struct Stack *stack = (struct Stack *) malloc(sizeof(*stack));
+    struct Stack *stack = malloc(sizeof(*stack));
+    if (NULL == stack) {
+        printf("Stack allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
     stack->count = 0;
     return stack;
 }
 
-int is_balance(struct Stack *self, char *test) {
+int is_balance(struct Stack *self, const char *test) {
     int balance = 0;
     while (*test != '\0') {
         char s;
@@ -98,7 +97,7 @@ int is_balance(struct Stack *self, char *test) {
             Stack_push(self, *test);
 
         switch (*test) {
-            case ')' :
+            case ')':
                 s = Stack_pop(self);
                 balance = (s == '(') ? 1 : 0;
                 break;
@@ -110,6 +109,8 @@ int is_balance(struct Stack *self, char *test) {
                 s = Stack_pop(self);
                 balance = (s == '[') ? 1 : 0;
                 break;
+            default:
+                break;
         }
         test++;
     }
@@ -118,10 +119,8 @@ int is_balance(struct Stack *self, char *test) {
 
 int main() {
     int balance = 0;
-    char *test = "(ABC)[{ZXYS}]{PQR}[HELLO]";
+    const char *test = "(ABC)[{ZXYS}]{PQR}[HELLO]";
     struct Stack *stack = Stack_init();
-    if (stack == NULL)
-        exit(0);
 
     balance = is_balance(stack, test);
     printf("\n");
@@ -132,5 +131,6 @@ int main() {
         printf("expression is not balance\n");
 
     Stack_del(stack);
+    stack = NULL;
     return 0;
 }
