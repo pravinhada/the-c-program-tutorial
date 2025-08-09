@@ -7,7 +7,7 @@ typedef struct {
 
 Point p1, p2;
 
-void printPoint(Point p) {
+void printPoint(const Point p) {
     printf("x = %f, y = %f\n", p.x, p.y);
 }
 
