@@ -4,12 +4,12 @@
 #define DEFAULT_RECEIVER  "xxxxx"
 #define DEFAULT_REWARD  6.25
 
-struct transaction {
+typedef struct {
     char *sender;
     char *receiver;
     float amount;
     char *created_date;
-};
+} transaction;
 
 struct block {
     int block_id;
@@ -17,7 +17,7 @@ struct block {
     unsigned long prev_hash;
     char *nonce;
     struct block *next_block;
-    struct transaction *transaction[10];
+    struct transaction **transactions;
 };
 
 typedef struct {
@@ -26,7 +26,7 @@ typedef struct {
     int blocks_size;
 } blockchain;
 
-blockchain *create_blockchain(blockchain *blockchain);
+blockchain *create_blockchain(blockchain *chains);
 
 void cleanup_blockchain(blockchain *blockchain);
 
@@ -39,3 +39,5 @@ void mine_new_block(blockchain *blockchain);
 void view_blockchain(const blockchain *blockchain);
 
 unsigned long generate_block_hash();
+
+void create_new_transaction(transaction **txn);

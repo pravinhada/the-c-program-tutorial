@@ -4,10 +4,10 @@
 
 #include "blockchain.h"
 
-blockchain *create_blockchain(blockchain *my_blockchain) {
-    if (my_blockchain != NULL) {
+blockchain *create_blockchain(blockchain *chains) {
+    if (chains != NULL) {
         printf("Blockchain already initialized!\n");
-        return my_blockchain;
+        return chains;
     }
     printf("Creating genesis block...\n");
     blockchain *chain = malloc(sizeof(blockchain));
@@ -64,11 +64,11 @@ void cleanup_blockchain(blockchain *blockchain) {
 unsigned long generate_block_hash() {
     int c;
     srand(time(NULL));
-    unsigned long hash = (rand() % 10000) + 1;
-    char *str = "my blockchain demo";
+    unsigned long hash = rand() % 10000 + 1;
+    const char *str = "my blockchain demo";
     while ((c = *str++)) {
         // hash = hash * 33 + c (simplified to bitwise operations for efficiency)
-        hash = ((hash << 5) + hash) + c;
+        hash = (hash << 5) + hash + c;
     }
     return hash;
 }
@@ -89,7 +89,7 @@ void view_blockchain(const blockchain *blockchain) {
     if (blockchain == NULL) {
         return;
     }
-    struct block *current_block = blockchain->head_block;
+    const struct block *current_block = blockchain->head_block;
     while (current_block != NULL) {
         printf("Block ID: %i\n", current_block->block_id);
         printf("Block hash: %lu\n", current_block->block_hash);
