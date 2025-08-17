@@ -13,14 +13,13 @@ struct Stack {
     int count;
 };
 
-void Stack_push(struct Stack *self, int input) {
-    struct Element *element;
+void Stack_push(struct Stack *self, const int input) {
     if (self->count > MAX_SIZE) {
         printf("Stack overflow\n");
         return;
     }
 
-    element = (struct Element *) malloc(sizeof(*element));
+    struct Element *element = malloc(sizeof(*element));
     element->data = input;
 
     element->next = self->top;
@@ -29,21 +28,19 @@ void Stack_push(struct Stack *self, int input) {
 }
 
 int Stack_pop(struct Stack *self) {
-    int data;
-    struct Element *cur;
     if (self == NULL || self->top == NULL) {
         printf("Stack underflow\n");
         return 0;
     }
-    cur = self->top;
-    data = cur->data;
+    struct Element *cur = self->top;
+    const int data = cur->data;
     self->top = cur->next;
     free(cur);
     self->count--;
     return data;
 }
 
-int Stack_peek(struct Stack *self) {
+int Stack_peek(const struct Stack *self) {
     if (self->count == 0) {
         printf("Stack is empty!\n");
         return 0;
@@ -52,25 +49,23 @@ int Stack_peek(struct Stack *self) {
 }
 
 void Stack_del(struct Stack *self) {
-    struct Element *cur, *next;
-    cur = self->top;
+    struct Element *cur = self->top;
     while (cur != NULL) {
-        next = cur->next;
+        struct Element *next = cur->next;
         free(cur);
         cur = next;
     }
-    free((void *) self);
+    free(self);
 }
 
-int Stack_length(struct Stack *self) {
+int Stack_length(const struct Stack *self) {
     if (self == NULL) return 0;
     return self->count;
 }
 
-void Stack_display(struct Stack *self) {
-    struct Element *cur;
+void Stack_display(const struct Stack *self) {
     if (self == NULL || self->count == 0) return;
-    cur = self->top;
+    const struct Element *cur = self->top;
     printf("Displaying contain of Stack:\n");
     while (cur != NULL) {
         printf("[%d]\n", cur->data);
@@ -79,7 +74,7 @@ void Stack_display(struct Stack *self) {
 }
 
 struct Stack *Stack_init(void) {
-    struct Stack *stack = (struct Stack *) malloc(sizeof(*stack));
+    struct Stack *stack = malloc(sizeof(*stack));
     if (NULL == stack) {
         printf("cannot allocate memory for stack!");
         exit(0);
@@ -94,17 +89,17 @@ struct queue {
     struct Stack *reverseStack;
 };
 
-int is_empty(struct queue *self) {
+int is_empty(const struct queue *self) {
     return self->forwardStack->count == 0
            && self->reverseStack->count == 0;
 }
 
-int is_full(struct queue *self) {
+int is_full(const struct queue *self) {
     return self->forwardStack->count == MAX_SIZE
            || self->reverseStack->count == MAX_SIZE;
 }
 
-void enqueue(struct queue *self, int data) {
+void enqueue(const struct queue *self, const int data) {
     if (is_full(self)) {
         printf("Queue is full\n");
         return;
@@ -119,7 +114,7 @@ void enqueue(struct queue *self, int data) {
     Stack_push(self->forwardStack, data);
 }
 
-int dequeue(struct queue *self) {
+int dequeue(const struct queue *self) {
     if (is_empty(self)) {
         printf("Queue is empty\n");
         return 0;
@@ -133,11 +128,11 @@ int dequeue(struct queue *self) {
 }
 
 void Queue_del(struct queue *self) {
-    free((void *) self);
+    free(self);
 }
 
 struct queue *Queue_init() {
-    struct queue *new = (struct queue *) malloc(sizeof(*new));
+    struct queue *new = malloc(sizeof(*new));
     if (NULL == new) {
         printf("cannot allocate memory for queue!");
         exit(0);

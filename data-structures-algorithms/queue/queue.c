@@ -10,16 +10,16 @@ struct queue {
     int tail;
 };
 
-int is_empty(struct queue *self) {
+int is_empty(const struct queue *self) {
     return self->head == -1;
 }
 
-int is_full(struct queue *self) {
-    int next = (self->tail + 1) % QUEUE_SIZE;
+int is_full(const struct queue *self) {
+    const int next = (self->tail + 1) % QUEUE_SIZE;
     return next == self->head;
 }
 
-void enqueue(struct queue *self, int data) {
+void enqueue(const struct queue *self, const int data) {
     if (is_full(self)) {
         printf("Queue is full\n");
         return;
@@ -31,13 +31,13 @@ void enqueue(struct queue *self, int data) {
         self->head = self->tail;
 }
 
-int dequeue(struct queue *self) {
+int dequeue(const struct queue *self) {
     if (is_empty(self)) {
         printf("Queue is empty\n");
         return 0;
     }
-    int index = self->head;
-    int data = self->element[index];
+    const int index = self->head;
+    const int data = self->element[index];
     if (index == self->tail)
         self->head = -1;
     else
@@ -47,17 +47,17 @@ int dequeue(struct queue *self) {
 }
 
 struct queue *Queue_init() {
-    struct queue *new = (struct queue *) malloc(sizeof(*new));
+    struct queue *new = malloc(sizeof(*new));
     new->head = -1;
     new->tail = -1;
     return new;
 }
 
 void Queue_del(struct queue *self) {
-    free((void *) self);
+    free(self);
 }
 
-void display(struct queue *self) {
+void display(const struct queue *self) {
     if (is_empty(self)) {
         printf("Queue is empty\n");
         return;
