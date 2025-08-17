@@ -11,6 +11,11 @@ typedef struct {
     char *created_date;
 } transaction;
 
+typedef struct {
+    transaction **data;
+    int size;
+} transactions;
+
 struct block {
     int block_id;
     unsigned long block_hash;
@@ -32,7 +37,7 @@ void cleanup_blockchain(blockchain *blockchain);
 
 void cleanup_block(struct block *head_block);
 
-void cleanup_transaction(struct transaction *transaction);
+void cleanup_transaction(transactions);
 
 void mine_new_block(blockchain *blockchain);
 
@@ -40,4 +45,6 @@ void view_blockchain(const blockchain *blockchain);
 
 unsigned long generate_block_hash();
 
-void create_new_transaction(transaction **txn);
+transactions create_new_transaction(transactions);
+
+void view_transaction(const transactions txn);

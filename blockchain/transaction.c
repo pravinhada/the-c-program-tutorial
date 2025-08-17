@@ -9,19 +9,7 @@ void clear_buffer() {
     while ((ch = getchar()) != '\n' && ch != EOF);
 }
 
-int transaction_count(transaction **transactions) {
-    if (transactions == NULL) {
-        return 0;
-    }
-    int count = 0;
-    while (*transactions != NULL) {
-        (*transactions)++;
-        count++;
-    }
-    return count;
-}
-
-void create_new_transaction(transaction **txn) {
+transactions create_new_transaction(transactions txn) {
     // this is added to clear the input buffer
     clear_buffer();
 
@@ -44,37 +32,36 @@ void create_new_transaction(transaction **txn) {
 
     transaction *t = malloc(sizeof(transaction));
     if (t == NULL) {
-        return;
+        return txn;
     }
     t->sender = malloc(20 * sizeof(char));
-    if (t->sender == NULL) return;
+    if (t->sender == NULL) return txn;
     strcpy(t->sender, s);
 
     t->receiver = malloc(20 * sizeof(char));
-    if (t->receiver == NULL) return;
+    if (t->receiver == NULL) return txn;
     strcpy(t->receiver, r);
     t->amount = 1;
 
-    if (txn == NULL) {
-        printf("Transactions count is: %d\n", transaction_count(txn));
-        transaction **t_list = malloc(sizeof(transaction));
-        if (t_list == NULL) {
-            return;
-        }
-        t_list[0] = t;
-        txn = t_list;
-    } else {
-        printf("Transactions count is: %d\n", transaction_count(txn));
-        txn = realloc(txn, (transaction_count(txn) + 1) * sizeof(transaction));
-        if (txn == NULL) return;
-        txn[transaction_count(txn) + 1] = t;
-    }
-    printf("Sender: %s\n", t->sender);
-    printf("Receiver: %s\n", t->receiver);
-    printf("Amount: %f\n", t->amount);
+    transaction **tt = realloc(txn.data, (txn.size + 1) * sizeof(transaction));
+    if (tt == NULL) return txn;
+    txn.data = tt;
+    txn.data[txn.size] = t;
+    txn.size++;
+    return txn;
+}
 
-    free(t->sender);
-    free(t->receiver);
-    free(t);
-    free(txn);
+
+void cleanup_transaction(const transactions txn) {
+    printf("Cleaning up all transactions:\n");
+    for (int i = 0; i < txn.size; i++) {
+        free(txn.data[i]);
+    }
+    free(txn.data);
+}
+
+void view_transaction(const transactions txn) {
+    for (int i = 0; i < txn.size; i++) {
+        printf("transaction[%d]: sender[%s], receiver[%s]\n", i, txn.data[i]->sender, txn.data[i]->receiver);
+    }
 }

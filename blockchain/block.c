@@ -51,8 +51,8 @@ void mine_new_block(blockchain *blockchain) {
 }
 
 void cleanup_blockchain(blockchain *blockchain) {
-    printf("cleaning up blockchain data structure..\n");
     if (blockchain != NULL) {
+        printf("cleaning up blockchain data structure..\n");
         cleanup_block(blockchain->head_block);
         free(blockchain);
         blockchain = NULL;
@@ -97,11 +97,4 @@ void view_blockchain(const blockchain *blockchain) {
         printf("\n");
         current_block = current_block->next_block;
     }
-}
-
-void cleanup_transaction(struct transaction *transaction) {
-    if (transaction == NULL) {
-        return;
-    }
-    free(transaction);
 }

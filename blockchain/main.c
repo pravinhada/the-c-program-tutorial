@@ -7,7 +7,7 @@
 int main() {
     printf("This is blockchain Program! Your default reward is: %f\n", DEFAULT_REWARD);
     blockchain *my_blockchain = NULL;
-    transaction **my_transactions = NULL;
+    transactions txn = {NULL, 0};
     int input = 0;
     char ch[1];
     do {
@@ -28,13 +28,16 @@ int main() {
         if (input == 1) {
             my_blockchain = create_blockchain(my_blockchain);
         } else if (input == 2) {
-            create_new_transaction(my_transactions);
+            txn = create_new_transaction(txn);
         } else if (input == 3) {
             mine_new_block(my_blockchain);
         } else if (input == 4) {
             view_blockchain(my_blockchain);
+        } else if (input == 5) {
+            view_transaction(txn);
         }
     } while (input != 0);
     cleanup_blockchain(my_blockchain);
+    cleanup_transaction(txn);
     return 0;
 }
