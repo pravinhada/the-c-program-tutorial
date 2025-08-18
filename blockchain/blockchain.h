@@ -22,7 +22,7 @@ struct block {
     unsigned long prev_hash;
     char *nonce;
     struct block *next_block;
-    struct transaction **transactions;
+    struct transactions *transactions;
 };
 
 typedef struct {

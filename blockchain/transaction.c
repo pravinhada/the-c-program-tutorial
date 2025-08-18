@@ -15,7 +15,6 @@ transactions create_new_transaction(transactions txn) {
 
     char s[20];
     char r[20];
-    //char *receiver;
     float amount;
 
     memset(s, 0, sizeof(s));
@@ -62,6 +61,7 @@ void cleanup_transaction(const transactions txn) {
 
 void view_transaction(const transactions txn) {
     for (int i = 0; i < txn.size; i++) {
-        printf("transaction[%d]: sender[%s], receiver[%s]\n", i, txn.data[i]->sender, txn.data[i]->receiver);
+        printf("transaction[%d]: sender[%s], receiver[%s], amount[%f]\n", i, txn.data[i]->sender, txn.data[i]->receiver,
+               txn.data[i]->amount);
     }
 }
