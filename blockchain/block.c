@@ -91,10 +91,10 @@ void view_blockchain(const blockchain *blockchain) {
     }
     const struct block *current_block = blockchain->head_block;
     while (current_block != NULL) {
+        printf("\n");
         printf("Block ID: %i\n", current_block->block_id);
         printf("Block hash: %lu\n", current_block->block_hash);
         printf("Nonce: %lu\n", current_block->prev_hash);
-        printf("\n");
         if (current_block->transactions) {
             const int size = current_block->transactions->size;
             const transactions txn = *current_block->transactions;

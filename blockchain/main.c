@@ -11,7 +11,7 @@ int main() {
     int input = 0;
     char ch[10];
     do {
-        printf("Blockchain Demo: \n");
+        printf("\nBlockchain Demo: \n");
         printf("1. Create a new blockchain \n");
         printf("2. Add a new transaction \n");
         printf("3. Mine a new blockchain \n");
