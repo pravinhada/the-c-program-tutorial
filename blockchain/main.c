@@ -9,7 +9,7 @@ int main() {
     blockchain *my_blockchain = NULL;
     transactions txn = {NULL, 0};
     int input = 0;
-    char ch[1];
+    char ch[10];
     do {
         printf("Blockchain Demo: \n");
         printf("1. Create a new blockchain \n");
@@ -17,6 +17,7 @@ int main() {
         printf("3. Mine a new blockchain \n");
         printf("4. View a blockchain \n");
         printf("5. View open transactions \n");
+        printf("6. Submit all transactions \n");
         printf("0. Exit \n");
         printf("Enter your choice: ");
         scanf("%s", ch);
@@ -28,16 +29,18 @@ int main() {
         if (input == 1) {
             my_blockchain = create_blockchain(my_blockchain);
         } else if (input == 2) {
-            txn = create_new_transaction(txn);
+            create_new_transaction(&txn);
         } else if (input == 3) {
             mine_new_block(my_blockchain);
         } else if (input == 4) {
             view_blockchain(my_blockchain);
         } else if (input == 5) {
             view_transaction(txn);
+        } else if (input == 6) {
+            submit_transactions(&txn, my_blockchain);
         }
     } while (input != 0);
     cleanup_blockchain(my_blockchain);
-    cleanup_transaction(txn);
+    cleanup_transaction(&txn);
     return 0;
 }

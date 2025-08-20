@@ -22,7 +22,7 @@ struct block {
     unsigned long prev_hash;
     char *nonce;
     struct block *next_block;
-    struct transactions *transactions;
+    transactions *transactions;
 };
 
 typedef struct {
@@ -37,7 +37,7 @@ void cleanup_blockchain(blockchain *blockchain);
 
 void cleanup_block(struct block *head_block);
 
-void cleanup_transaction(transactions);
+void cleanup_transaction(transactions *txn);
 
 void mine_new_block(blockchain *blockchain);
 
@@ -45,6 +45,8 @@ void view_blockchain(const blockchain *blockchain);
 
 unsigned long generate_block_hash();
 
-transactions create_new_transaction(transactions);
+void create_new_transaction(transactions *txn);
 
-void view_transaction(const transactions txn);
+void view_transaction(transactions txn);
+
+void submit_transactions(transactions *txn, const blockchain *blockchain);

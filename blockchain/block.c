@@ -95,6 +95,16 @@ void view_blockchain(const blockchain *blockchain) {
         printf("Block hash: %lu\n", current_block->block_hash);
         printf("Nonce: %lu\n", current_block->prev_hash);
         printf("\n");
+        if (current_block->transactions) {
+            const int size = current_block->transactions->size;
+            const transactions txn = *current_block->transactions;
+            printf("All Transactions:\n");
+            for (int i = 0; i < size; i++) {
+                printf("transaction[%d]: sender[%s], receiver[%s], amount[%f]\n", i, txn.data[i]->sender,
+                       txn.data[i]->receiver,
+                       txn.data[i]->amount);
+            }
+        }
         current_block = current_block->next_block;
     }
 }

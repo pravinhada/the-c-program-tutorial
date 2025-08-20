@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "blockchain.h"
 
@@ -9,7 +10,7 @@ void clear_buffer() {
     while ((ch = getchar()) != '\n' && ch != EOF);
 }
 
-transactions create_new_transaction(transactions txn) {
+void create_new_transaction(transactions *txn) {
     // this is added to clear the input buffer
     clear_buffer();
 
@@ -31,32 +32,50 @@ transactions create_new_transaction(transactions txn) {
 
     transaction *t = malloc(sizeof(transaction));
     if (t == NULL) {
-        return txn;
+        return;
     }
     t->sender = malloc(20 * sizeof(char));
-    if (t->sender == NULL) return txn;
+    if (t->sender == NULL) return;
     strcpy(t->sender, s);
 
     t->receiver = malloc(20 * sizeof(char));
-    if (t->receiver == NULL) return txn;
+    if (t->receiver == NULL) return;
     strcpy(t->receiver, r);
     t->amount = 1;
 
-    transaction **tt = realloc(txn.data, (txn.size + 1) * sizeof(transaction));
-    if (tt == NULL) return txn;
-    txn.data = tt;
-    txn.data[txn.size] = t;
-    txn.size++;
-    return txn;
+    transaction **tt = realloc(txn->data, (txn->size + 1) * sizeof(transaction *));
+    if (!tt) {
+        free(t->sender);
+        free(t->receiver);
+        free(t);
+        return;
+    };
+    txn->data = tt;
+    txn->data[txn->size] = t;
+    txn->size++;
 }
 
+void submit_transactions(transactions *txn, const blockchain *blockchain) {
+    printf("Submitting transactions:\n");
+    if (txn == NULL) return;
+    struct block *tmp = blockchain->tail_block;
+    if (tmp == NULL) return;
+    tmp->transactions = txn;
+    txn = NULL;
+}
 
-void cleanup_transaction(const transactions txn) {
+void cleanup_transaction(transactions *txn) {
     printf("Cleaning up all transactions:\n");
-    for (int i = 0; i < txn.size; i++) {
-        free(txn.data[i]);
+    for (int i = 0; i < txn->size; i++) {
+        free(txn->data[i]->sender);
+        txn->data[i]->sender = NULL;
+        free(txn->data[i]->receiver);
+        txn->data[i]->receiver = NULL;
+        free(txn->data[i]);
+        txn->data[i] = NULL;
     }
-    free(txn.data);
+    free(txn->data);
+    txn->data = NULL;
 }
 
 void view_transaction(const transactions txn) {
